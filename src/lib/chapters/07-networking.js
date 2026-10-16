@@ -13,9 +13,9 @@ export default {
 	],
 	terms: [
 		{ term: 'DNS record', def: 'A name to value mapping. `A` gives an IPv4 address, `AAAA` an IPv6 address, `CNAME` another name. The TTL says how long resolvers may cache the answer.' },
-		{ term: 'Port', def: 'A number that picks one listening program on a host. Below 1024 a process needs root or the `CAP_NET_BIND_SERVICE` capability to bind it.' },
+		{ term: 'Port', def: 'A number that picks one listening program on a host. On Linux, by default, a process needs root or the `CAP_NET_BIND_SERVICE` capability to bind a port below 1024.' },
 		{ term: 'TCP vs UDP', def: 'TCP opens a connection, then delivers bytes in order or reports failure. UDP sends single packets with no connection. DNS uses UDP, and [TCP too](https://www.rfc-editor.org/rfc/rfc7766) for big answers.' },
-		{ term: 'TLS certificate', def: 'A file that proves a server owns a name. The client checks two things: the name matches the URL, and a trusted CA signed it.' },
+		{ term: 'TLS certificate', def: 'A file that proves a server owns a name. The client checks that the name matches the URL, that a trusted CA signed it, and that it has not expired.' },
 		{ term: 'SNI', def: 'Server Name Indication: the client sends the host name inside the TLS handshake, so one IP can serve many certificates.' }
 	],
 	diagram: {

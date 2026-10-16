@@ -17,7 +17,7 @@ export default {
 		{ term: 'Scalar', def: 'A single value. Unquoted (plain), the parser picks its type: string, number, boolean or null. Quoted, it is always a string.' },
 		{ term: 'Block scalar', def: 'Multi-line text. `|` keeps the line breaks, `>` folds them into spaces. Add `-` (`|-`) to drop the final newline.' },
 		{ term: 'Anchor and alias', def: '`&name` labels a node, `*name` reuses it elsewhere. The merge key `<<: *name` copies a mapping\'s keys into another mapping.' },
-		{ term: 'Document', def: 'One YAML file can hold several documents, each starting with `---`. Kubernetes uses this to put many resources in one file.' }
+		{ term: 'Document', def: 'One YAML file can hold several documents, separated by `---` lines. Kubernetes uses this to put many resources in one file.' }
 	],
 	diagram: {
 		direction: 'LR',

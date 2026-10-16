@@ -12,10 +12,10 @@ export default {
 		'Aujourd’hui : la ligne en tête de tout script sérieux, les guillemets, les scripts qu’on peut relancer deux fois, et shellcheck, le linter qui attrape presque tout le reste.'
 	],
 	terms: [
-		{ term: 'errexit (`set -e`)', def: 'Arrête le script quand une commande échoue. Il y a des exceptions : les commandes testées par `if`, `while` ou `until`, toute partie d’un `&&` ou `||` sauf la dernière, et tout ce qui est inversé avec `!`.' },
+		{ term: 'errexit (`set -e`)', def: 'Arrête le script quand une commande échoue. Il y a des exceptions : les commandes testées par `if`, `while` ou `until`, toute partie d’un `&&` ou `||` sauf la dernière, tout ce qui est inversé avec `!`, et, sans pipefail, chaque commande d’un pipeline sauf la dernière.' },
 		{ term: 'nounset (`set -u`)', def: 'Traite une variable non définie comme une erreur. Un shell non interactif affiche un message et s’arrête.' },
 		{ term: 'pipefail', def: 'Un pipeline renvoie le code de la commande la plus à droite qui a échoué, et pas seulement celui de la dernière commande. Désactivé par défaut.' },
-		{ term: 'Découpage en mots', def: 'Bash découpe un `$var` sans guillemets sur les espaces et développe les `*` qu’il contient. Mets-le entre guillemets, `"$var"`, et il reste un seul mot.' },
+		{ term: 'Découpage en mots', def: 'Bash découpe un `$var` sans guillemets sur les espaces, les tabulations et les retours à la ligne (l’`IFS` par défaut) et développe les `*` qu’il contient. Mets-le entre guillemets, `"$var"`, et il reste un seul mot.' },
 		{ term: 'Idempotent', def: 'Le lancer deux fois donne le même résultat que le lancer une fois. Un script qu’un pipeline peut relancer sans risque.' },
 		{ term: 'shellcheck', def: 'Un linter pour scripts shell. Chaque avertissement a un code, comme SC2086, avec une page de wiki qui l’explique.' }
 	],
@@ -45,7 +45,7 @@ export default {
 			{
 				add: ['lint["shellcheck, avant le merge"]', 'lint -.->|"relit"| run', 'class lint ext'],
 				highlight: ['lint'],
-				note: 'shellcheck lit le script sans l’exécuter et signale les variables sans guillemets (SC2086), les `cd` sans plan B (SC2164) et bien plus. Il ne sait **pas** que tu as oublié pipefail : la première ligne reste ton boulot.'
+				note: 'shellcheck lit le script sans l’exécuter et signale les variables sans guillemets (SC2086), les `cd` sans plan B (SC2164) et bien plus. Avec ses vérifications par défaut, il ne signale **pas** un pipefail oublié (seule l’option `check-extra-masked-returns`, SC2312, le fait) : la première ligne reste ton boulot.'
 			}
 		]
 	},
@@ -89,7 +89,7 @@ fi
 # preserve the result
 exit $res`,
 		notes: [
-			'Les trois lignes `set -o` sont la forme longue de `set -euo pipefail`. Kubernetes utilise les noms longs pour que le lecteur n’ait pas à se souvenir des lettres.',
+			'Les trois lignes `set -o` sont la forme longue de `set -euo pipefail`. Les noms longs disent ce que fait chaque ligne sans avoir à se souvenir des lettres.',
 			'`"${DOCKER:-docker}"` : prend `$DOCKER` s’il est défini, sinon `docker`. Avec nounset, un `$DOCKER` tout seul arrêterait le script. Le même truc apparaît dans [`"${KUBE_JUNIT_REPORT_DIR:-}"`](https://github.com/kubernetes/kubernetes/blob/9b965ac43f05d304180c7b8b9611264530788948/hack/verify-shellcheck.sh#L88-L93) pour tester une variable qui peut ne pas exister.',
 			'`shellcheck … || res=$?` : avec errexit, un shellcheck en échec arrêterait le script tout de suite. Le `||` fait partie des exceptions, donc le script **garde le code**, affiche son aide sur stderr, puis transmet ce même code avec `exit $res`.',
 			'`"${SHELLCHECK_OPTIONS[@]}"` entre guillemets développe chaque élément du tableau en un mot séparé, même s’il contient un espace. C’est comme ça qu’on construit une ligne de commande proprement en bash.'
@@ -116,7 +116,7 @@ exit $res`,
 			'`rm -rf ./*` : shellcheck (SC2035) prévient qu’un fichier nommé `-rf` deviendrait sinon une option.',
 			'Avec pipefail, un `pg_dump` raté fait maintenant échouer le script au lieu de laisser une archive vide derrière un code de sortie à 0.',
 			'L’ajout rajoute une ligne à chaque passage. Rends-le idempotent : `grep -qxF \'export PATH="$PATH:/opt/bin"\' ~/.bashrc || echo \'…\' >> ~/.bashrc`.',
-			'Passe `shellcheck` dessus. Sur l’original, il signale SC2164 et SC2086 sur la ligne `cd`. Il ne dit rien sur le pipeline : pipefail, c’est à toi d’y penser.'
+			'Passe `shellcheck` dessus. Sur l’original, il signale SC2164 et SC2086 sur la ligne `cd`. Avec ses vérifications par défaut, il ne dit rien sur le pipeline : pipefail, c’est à toi d’y penser.'
 		]
 	},
 	quiz: [

@@ -17,7 +17,7 @@ export default {
 		{ term: 'Scalaire', def: 'Une valeur unique. Sans guillemets (plain), le parseur choisit son type : chaîne, nombre, booléen ou null. Entre guillemets, c’est toujours une chaîne.' },
 		{ term: 'Bloc scalaire', def: 'Du texte sur plusieurs lignes. `|` garde les retours à la ligne, `>` les replie en espaces. Ajoute `-` (`|-`) pour supprimer le retour à la ligne final.' },
 		{ term: 'Ancre et alias', def: '`&name` étiquette un nœud, `*name` le réutilise ailleurs. La clé de fusion `<<: *name` copie les clés d’un mapping dans un autre mapping.' },
-		{ term: 'Document', def: 'Un seul fichier YAML peut contenir plusieurs documents, chacun commence par `---`. Kubernetes s’en sert pour mettre plusieurs ressources dans un fichier.' }
+		{ term: 'Document', def: 'Un seul fichier YAML peut contenir plusieurs documents, séparés par des lignes `---`. Kubernetes s’en sert pour mettre plusieurs ressources dans un fichier.' }
 	],
 	diagram: {
 		direction: 'LR',
