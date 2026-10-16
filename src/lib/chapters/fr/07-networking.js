@@ -13,9 +13,9 @@ export default {
 	],
 	terms: [
 		{ term: 'Enregistrement DNS', def: 'Une correspondance entre un nom et une valeur. `A` donne une adresse IPv4, `AAAA` une adresse IPv6, `CNAME` un autre nom. Le TTL dit combien de temps les résolveurs peuvent garder la réponse en cache.' },
-		{ term: 'Port', def: 'Un numéro qui désigne un programme en écoute sur une machine. Sous 1024, un processus a besoin d’être root ou d’avoir la capability `CAP_NET_BIND_SERVICE` pour l’utiliser.' },
+		{ term: 'Port', def: 'Un numéro qui désigne un programme en écoute sur une machine. Sous Linux, par défaut, un processus a besoin d’être root ou d’avoir la capability `CAP_NET_BIND_SERVICE` pour utiliser un port sous 1024.' },
 		{ term: 'TCP ou UDP', def: 'TCP ouvre une connexion, puis livre les octets dans l’ordre ou signale l’échec. UDP envoie des paquets isolés, sans connexion. DNS utilise UDP, et [TCP aussi](https://www.rfc-editor.org/rfc/rfc7766) pour les grosses réponses.' },
-		{ term: 'Certificat TLS', def: 'Un fichier qui prouve qu’un serveur possède un nom. Le client vérifie deux choses : le nom correspond à l’URL, et une CA de confiance l’a signé.' },
+		{ term: 'Certificat TLS', def: 'Un fichier qui prouve qu’un serveur possède un nom. Le client vérifie que le nom correspond à l’URL, qu’une CA de confiance l’a signé, et qu’il n’a pas expiré.' },
 		{ term: 'SNI', def: 'Server Name Indication : le client envoie le nom d’hôte dans le handshake TLS, ce qui permet à une seule IP de servir plusieurs certificats.' }
 	],
 	diagram: {

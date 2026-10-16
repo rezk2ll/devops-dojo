@@ -12,10 +12,10 @@ export default {
 		'Today: the line at the top of every serious script, quoting, scripts you can run twice, and shellcheck, the linter that catches most of the rest.'
 	],
 	terms: [
-		{ term: 'errexit (`set -e`)', def: 'Stop the script when a command fails. It has exceptions: commands tested by `if`, `while` or `until`, any part of `&&` or `||` but the last, and anything negated with `!`.' },
+		{ term: 'errexit (`set -e`)', def: 'Stop the script when a command fails. It has exceptions: commands tested by `if`, `while` or `until`, any part of `&&` or `||` but the last, anything negated with `!`, and, without pipefail, every command of a pipeline but the last.' },
 		{ term: 'nounset (`set -u`)', def: 'Treat an unset variable as an error. A non-interactive shell prints a message and exits.' },
 		{ term: 'pipefail', def: 'A pipeline returns the status of the rightmost command that failed, not just the status of the last command. Off by default.' },
-		{ term: 'Word splitting', def: 'Bash splits an unquoted `$var` on spaces and expands any `*` in it. Quote it, `"$var"`, and it stays one word.' },
+		{ term: 'Word splitting', def: 'Bash splits an unquoted `$var` on spaces, tabs and newlines (the default `IFS`) and expands any `*` in it. Quote it, `"$var"`, and it stays one word.' },
 		{ term: 'Idempotent', def: 'Running it twice gives the same result as running it once. A script a pipeline can safely retry.' },
 		{ term: 'shellcheck', def: 'A linter for shell scripts. Each warning has a code, like SC2086, with a wiki page that explains it.' }
 	],
@@ -45,7 +45,7 @@ export default {
 			{
 				add: ['lint["shellcheck, before merge"]', 'lint -.->|"reviews"| run', 'class lint ext'],
 				highlight: ['lint'],
-				note: 'shellcheck reads the script without running it and flags unquoted variables (SC2086), `cd` without a fallback (SC2164) and much more. It does **not** know you forgot pipefail, so the first line stays your job.'
+				note: 'shellcheck reads the script without running it and flags unquoted variables (SC2086), `cd` without a fallback (SC2164) and much more. With its default checks it does **not** flag a missing pipefail (only the optional `check-extra-masked-returns`, SC2312, does), so the first line stays your job.'
 			}
 		]
 	},
@@ -89,7 +89,7 @@ fi
 # preserve the result
 exit $res`,
 		notes: [
-			'The three `set -o` lines are the long form of `set -euo pipefail`. Kubernetes uses the long names so a reader does not have to remember the letters.',
+			'The three `set -o` lines are the long form of `set -euo pipefail`. The long names say what each line does without remembering the letters.',
 			'`"${DOCKER:-docker}"`: use `$DOCKER` if set, else `docker`. Under nounset, a bare `$DOCKER` would stop the script. The same trick appears as [`"${KUBE_JUNIT_REPORT_DIR:-}"`](https://github.com/kubernetes/kubernetes/blob/9b965ac43f05d304180c7b8b9611264530788948/hack/verify-shellcheck.sh#L88-L93) to test a variable that may be unset.',
 			'`shellcheck … || res=$?`: under errexit a failing shellcheck would stop the script at once. The `||` is one of the exceptions, so the script **saves the code**, prints its help on stderr, then passes the same code on with `exit $res`.',
 			'`"${SHELLCHECK_OPTIONS[@]}"` in double quotes expands each array element to a separate word, even if one contains a space. That is how you build a command line safely in bash.'
@@ -116,7 +116,7 @@ exit $res`,
 			'`rm -rf ./*`: shellcheck (SC2035) warns that a file named `-rf` would otherwise become an option.',
 			'With pipefail, a failed `pg_dump` now fails the script instead of leaving an empty archive behind an exit code of 0.',
 			'The append adds a line on every run. Make it idempotent: `grep -qxF \'export PATH="$PATH:/opt/bin"\' ~/.bashrc || echo \'…\' >> ~/.bashrc`.',
-			'Run `shellcheck` on it. On the original it reports SC2164 and SC2086 on the `cd` line. It says nothing about the pipeline: pipefail is on you.'
+			'Run `shellcheck` on it. On the original it reports SC2164 and SC2086 on the `cd` line. With its default checks it says nothing about the pipeline: pipefail is on you.'
 		]
 	},
 	quiz: [
