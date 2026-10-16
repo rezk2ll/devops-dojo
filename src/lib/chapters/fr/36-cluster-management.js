@@ -137,7 +137,7 @@ spec:
 			q: 'Le HPA demande 10 pods, mais 4 restent `Pending` parce qu’aucun nœud n’a de place. Quel composant règle ça ?',
 			options: [
 				'Le HPA, en baissant les requests CPU',
-				'Le scheduler, en évinçant d’autres pods',
+				'Le contrôleur de Deployment, en recréant les pods en attente',
 				'Le cluster autoscaler, en ajoutant un nœud à un node pool',
 				'Le kubelet, en créant plus de mémoire'
 			],

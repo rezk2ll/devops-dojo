@@ -12,7 +12,7 @@ export default {
 		'**GitOps** inverse le sens. L’état du cluster vit dans un repo Git. Un agent **dans le cluster** tire ce repo et aligne le cluster dessus, encore et encore. Tu veux un changement ? Ouvre une pull request.'
 	],
 	terms: [
-		{ term: 'GitOps', def: 'L’état voulu est déclaré dans Git, versionné, tiré automatiquement par un agent et réconcilié en continu. Ce sont les quatre principes d’OpenGitOps.' },
+		{ term: 'GitOps', def: 'L’état voulu est déclaré, stocké de façon versionnée et immuable (en pratique, dans Git), tiré automatiquement par un agent et réconcilié en continu. Ce sont les quatre principes d’OpenGitOps.' },
 		{ term: 'Déploiement push', def: 'La pipeline CI détient les accès au cluster et lance `kubectl apply` ou `helm upgrade` contre lui.' },
 		{ term: 'Déploiement pull', def: 'Un agent qui tourne dans le cluster surveille Git et applique les changements lui-même. La CI ne touche jamais le cluster.' },
 		{ term: 'Application Argo CD', def: 'Un objet Kubernetes qui dit : prends les manifestes de ce repo, cette révision et ce chemin, et garde-les appliqués dans ce cluster et ce namespace.' },

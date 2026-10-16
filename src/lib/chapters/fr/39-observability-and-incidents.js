@@ -28,7 +28,7 @@ export default {
 					'prom -->|"scrape"| app'
 				],
 				highlight: ['app', 'prom'],
-				note: 'Prometheus **tire** : à intervalle fixe (une minute par défaut), il récupère `/metrics` sur chaque cible et stocke les nombres. Les logs et les traces vont dans leurs propres stockages, mais c’est sur les métriques que tu alertes.'
+				note: 'Prometheus **tire** : à intervalle fixe (une minute par défaut), il récupère `/metrics` sur chaque cible et stocke les nombres. Les logs et les traces vont dans leurs propres stockages, mais c’est en général sur les métriques que tu alertes.'
 			},
 			{
 				add: [
@@ -47,7 +47,7 @@ export default {
 					'class oncall ext'
 				],
 				highlight: ['am', 'oncall'],
-				note: 'Prometheus envoie les alertes actives à **Alertmanager**, qui les dédoublonne, les regroupe, applique les silences et les route vers un destinataire : un pager pour le critique, un e-mail ou un ticket pour un warning. Une seule personne est d’astreinte à la fois, à tour de rôle.'
+				note: 'Prometheus envoie les alertes actives à **Alertmanager**, qui les dédoublonne, les regroupe, applique les silences et les route vers un destinataire, par exemple un pager pour les alertes critiques et un e-mail ou un ticket pour les warnings. L’astreinte tourne entre les personnes, et beaucoup d’équipes ont un primaire et un secondaire.'
 			},
 			{
 				add: [

@@ -28,7 +28,7 @@ export default {
 					'prom -->|"scrapes"| app'
 				],
 				highlight: ['app', 'prom'],
-				note: 'Prometheus **pulls**: at a fixed interval (one minute by default) it fetches `/metrics` from each target and stores the numbers. Logs and traces go to their own stores, but metrics are what you alert on.'
+				note: 'Prometheus **pulls**: at a fixed interval (one minute by default) it fetches `/metrics` from each target and stores the numbers. Logs and traces go to their own stores, but alerts are usually built on metrics.'
 			},
 			{
 				add: [
@@ -47,7 +47,7 @@ export default {
 					'class oncall ext'
 				],
 				highlight: ['am', 'oncall'],
-				note: 'Prometheus sends firing alerts to **Alertmanager**, which deduplicates and groups them, applies silences and routes them to a receiver: a pager for critical, email or a ticket for warning. One person is on call at a time, on a rotation.'
+				note: 'Prometheus sends firing alerts to **Alertmanager**, which deduplicates and groups them, applies silences and routes them to a receiver, for example a pager for critical alerts and email or a ticket for warnings. On-call is a rotation, and many teams have both a primary and a secondary.'
 			},
 			{
 				add: [

@@ -12,7 +12,7 @@ export default {
 		'**GitOps** turns it around. The cluster state lives in a Git repo. An agent **inside the cluster** pulls that repo and makes the cluster match it, again and again. Want a change? Open a pull request.'
 	],
 	terms: [
-		{ term: 'GitOps', def: 'Desired state is declared in Git, versioned, pulled automatically by an agent and continuously reconciled. These are the four OpenGitOps principles.' },
+		{ term: 'GitOps', def: 'Desired state is declared, stored versioned and immutable (in practice, in Git), pulled automatically by an agent and continuously reconciled. These are the four OpenGitOps principles.' },
 		{ term: 'Push deploy', def: 'The CI pipeline holds cluster credentials and runs `kubectl apply` or `helm upgrade` against the cluster.' },
 		{ term: 'Pull deploy', def: 'An agent running in the cluster watches Git and applies changes itself. CI never touches the cluster.' },
 		{ term: 'Argo CD Application', def: 'A Kubernetes object that says: take the manifests at this repo, revision and path, and keep them applied in this cluster and namespace.' },
