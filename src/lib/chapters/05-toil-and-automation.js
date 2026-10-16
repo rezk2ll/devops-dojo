@@ -13,7 +13,7 @@ export default {
 		'Google\'s SRE teams have a precise word for this kind of work: **toil**. Today you learn to spot it, measure it, and decide what to automate first.'
 	],
 	terms: [
-		{ term: 'Toil', def: 'Work tied to running a production service that is manual, repetitive, automatable, reactive, leaves no lasting improvement, and grows with the size of the service.' },
+		{ term: 'Toil', def: 'Work tied to running a production service that tends to be manual, repetitive, automatable, tactical (interrupt-driven and reactive), leaves no lasting improvement, and grows with the size of the service. A task does not need all six traits to be toil.' },
 		{ term: 'Overhead', def: 'Admin work not tied to running the service: meetings, HR paperwork, goal setting. Necessary, but not toil.' },
 		{ term: 'Engineering work', def: 'Work that needs human judgment and makes a lasting improvement: writing automation, fixing a root cause, improving monitoring.' },
 		{ term: 'Runbook', def: 'Written steps for a recurring task or alert: "log in to X, run this, check the output, restart Y if...". In other words, pseudocode.' },
@@ -85,7 +85,7 @@ export default {
     with_items: "{{ groups.lbservers }}"
 …`,
 		notes: [
-			'This is a **runbook turned into code**. Silence the alerts, take the server out of HAProxy, update it, wait until port 80 answers, put it back. The steps you used to do by hand at night, in the same order every time.',
+			'This is a **runbook turned into code**. Silence the alerts, take the server out of HAProxy, update it, wait until port 80 answers, put it back. The steps you used to do by hand at night, in the same order every time. You will learn Ansible in part 6.',
 			'`serial: 1` makes Ansible handle **one host at a time** instead of all of them in parallel, which is what a rolling update needs ([Ansible docs](https://github.com/ansible/ansible-documentation/blob/8f66c43ba55198c517054bed5ccaf2b4bf6721c0/docs/docsite/rst/playbook_guide/playbooks_strategies.rst#setting-the-batch-size-with-serial)).',
 			'`delegate_to` runs a task on another machine: the HAProxy and Nagios tasks run on the load balancer and monitoring hosts, about the web server being updated ([delegation docs](https://github.com/ansible/ansible-documentation/blob/8f66c43ba55198c517054bed5ccaf2b4bf6721c0/docs/docsite/rst/playbook_guide/playbooks_delegation.rst)). Ansible runs `pre_tasks`, then the roles, then `post_tasks`.',
 			'A safety check is built in. If port 80 does not answer within 80 seconds, `wait_for` fails, and by default Ansible stops running tasks on that host. The broken server is **never put back** into HAProxy.',

@@ -82,7 +82,7 @@ export default {
       run: |
         pytest`,
 		notes: [
-			'The workflow runs on **every push and every pull request** to the default branch. `$default-branch` is a template placeholder: GitHub replaces it with your repo\'s default branch name when you create the workflow ([docs](https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates)).',
+			'The workflow runs on **every push and every pull request** to the default branch. `$default-branch` is a template placeholder: GitHub replaces it with your repo\'s default branch name when you create the workflow ([docs](https://docs.github.com/en/actions/how-tos/reuse-automations/create-workflow-templates)). You will learn GitHub Actions in part 5.',
 			'The first `flake8` call only selects a few serious codes: `E9` (errors such as a file that does not even parse) and `F` codes such as `F82` (undefined names). Those fail the job. Cheap checks first, so the most common mistakes come back in seconds.',
 			'The second call adds `--exit-zero`: flake8 then exits with status 0 even when it finds problems ([flake8 options](https://flake8.pycqa.org/en/latest/user/options.html)). Style issues are reported, but they never stop the line. Choosing **which feedback blocks and which only informs** is a design decision.',
 			'Steps run in order. By default a step only runs if all previous steps succeeded ([status check functions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions)), so a broken lint skips `pytest`. You get the first failure fast instead of every failure slowly.'

@@ -15,8 +15,8 @@ export default {
 		{ term: 'DevOps', def: 'Un mélange de culture, de pratiques et d’outils qui permet à une organisation de livrer et d’exploiter du logiciel vite et de façon fiable. Dev et ops partagent l’objectif au lieu de se passer le travail par-dessus un mur.' },
 		{ term: 'Silo', def: 'Une équipe qui travaille pour son propre objectif, avec ses outils et son vocabulaire, et ne parle aux autres équipes que par tickets.' },
 		{ term: 'CALMS', def: 'Culture, Automation, Lean, Measurement, Sharing. Une grille pour voir jusqu’où une équipe est vraiment allée vers DevOps.' },
-		{ term: 'You build it, you run it', def: 'Ceux qui écrivent un service participent aussi à son exploitation, astreinte comprise. Devs et ops travaillent en binôme pendant toute la vie de l’appli.' },
-		{ term: 'Silo d’équipe DevOps', def: 'L’anti-pattern : une nouvelle équipe appelée « DevOps » placée entre dev et ops. Elle devient un troisième mur.' }
+		{ term: 'You build it, you run it', def: 'Ceux qui écrivent un service participent aussi à son exploitation, astreinte comprise.' },
+		{ term: 'Silo d’équipe DevOps', def: 'L’anti-pattern : une nouvelle équipe appelée « DevOps » placée entre dev et ops. Elle devient un silo de plus et éloigne encore dev et ops.' }
 	],
 	diagram: {
 		direction: 'LR',
@@ -90,7 +90,7 @@ export default {
       db:
         condition: service_healthy`,
 		notes: [
-			'C’est un savoir qu’un ops gardait dans un wiki ou dans sa tête : démarrer la base d’abord, vérifier qu’elle répond, relancer ce qui plante. Ici, c’est **un fichier dans le dépôt de l’appli**, à côté du code, modifié avec la même revue.',
+			'C’est un savoir qu’un ops gardait dans un wiki ou dans sa tête : démarrer la base d’abord, vérifier qu’elle répond, relancer ce qui plante. Ici, c’est **un fichier dans le dépôt de l’appli**, à côté du code, modifié avec la même revue. Tu apprendras Compose dans la partie 4.',
 			'`condition: service_healthy` dit à Compose d’attendre que le healthcheck de `db` passe avant de démarrer `backend` ([doc Compose](https://docs.docker.com/reference/compose-file/services/)). L’ordre de démarrage est écrit, pas mémorisé.',
 			'`restart: always` relance le conteneur jusqu’à ce qu’il soit supprimé. Tu connais l’idée avec `Restart=always` dans une unit systemd. Même intention, mais visible aussi par le développeur.',
 			'Le fichier n’est pas DevOps. Docker Compose est un outil. **DevOps, c’est que dev et ops lisent, modifient et possèdent ce fichier ensemble.** Un outil peut faciliter le partage. Il ne peut pas forcer les gens à partager.'

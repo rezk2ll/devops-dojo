@@ -13,7 +13,7 @@ export default {
 		'Les équipes SRE de Google ont un mot précis pour ce genre de travail : le **toil**. Aujourd’hui, tu apprends à le repérer, à le mesurer, et à décider quoi automatiser en premier.'
 	],
 	terms: [
-		{ term: 'Toil', def: 'Du travail lié à l’exploitation d’un service en prod qui est manuel, répétitif, automatisable, réactif, sans amélioration durable, et qui grandit avec la taille du service.' },
+		{ term: 'Toil', def: 'Du travail lié à l’exploitation d’un service en prod qui tend à être manuel, répétitif, automatisable, tactique (déclenché par des interruptions, réactif), sans amélioration durable, et qui grandit avec la taille du service. Une tâche n’a pas besoin des six traits pour être du toil.' },
 		{ term: 'Overhead', def: 'Le travail administratif qui n’est pas lié à l’exploitation du service : réunions, paperasse RH, fixation d’objectifs. Nécessaire, mais pas du toil.' },
 		{ term: 'Travail d’ingénierie', def: 'Du travail qui demande du jugement humain et apporte une amélioration durable : écrire de l’automatisation, corriger une cause racine, améliorer le monitoring.' },
 		{ term: 'Runbook', def: 'Les étapes écrites d’une tâche ou d’une alerte récurrente : « se connecter à X, lancer ceci, vérifier la sortie, relancer Y si... ». Autrement dit, du pseudocode.' },
@@ -85,7 +85,7 @@ export default {
     with_items: "{{ groups.lbservers }}"
 …`,
 		notes: [
-			'C’est un **runbook transformé en code**. Couper les alertes, sortir le serveur de HAProxy, le mettre à jour, attendre que le port 80 réponde, le remettre. Les étapes que tu faisais à la main la nuit, dans le même ordre à chaque fois.',
+			'C’est un **runbook transformé en code**. Couper les alertes, sortir le serveur de HAProxy, le mettre à jour, attendre que le port 80 réponde, le remettre. Les étapes que tu faisais à la main la nuit, dans le même ordre à chaque fois. Tu apprendras Ansible dans la partie 6.',
 			'`serial: 1` fait traiter par Ansible **un hôte à la fois** au lieu de tous en parallèle, ce dont un rolling update a besoin ([doc Ansible](https://github.com/ansible/ansible-documentation/blob/8f66c43ba55198c517054bed5ccaf2b4bf6721c0/docs/docsite/rst/playbook_guide/playbooks_strategies.rst#setting-the-batch-size-with-serial)).',
 			'`delegate_to` lance une tâche sur une autre machine : les tâches HAProxy et Nagios tournent sur les hôtes load balancer et monitoring, pour le serveur web en cours de mise à jour ([doc sur la délégation](https://github.com/ansible/ansible-documentation/blob/8f66c43ba55198c517054bed5ccaf2b4bf6721c0/docs/docsite/rst/playbook_guide/playbooks_delegation.rst)). Ansible lance les `pre_tasks`, puis les rôles, puis les `post_tasks`.',
 			'Un garde-fou est intégré. Si le port 80 ne répond pas en 80 secondes, `wait_for` échoue, et par défaut Ansible arrête de lancer des tâches sur cet hôte. Le serveur cassé n’est **jamais remis** dans HAProxy.',
