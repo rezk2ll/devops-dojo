@@ -93,7 +93,7 @@ export default {
 		cost: [
 			'Les variables peuvent venir de plus de vingt endroits. Deux personnes qui posent la même variable à deux endroits vont perdre un après-midi sur la priorité.',
 			'Les handlers tournent à la fin du play. Si une tâche suivante a besoin du service rechargé, il faut ajouter `meta: flush_handlers`.',
-			'Un mot de passe de vault est un secret partagé. Qui l’a lit tous les secrets qu’il protège, et le changer veut dire `ansible-vault rekey` sur chaque fichier.'
+			'Un mot de passe de vault est un secret partagé. Qui l’a lit tous les secrets qu’il protège, et le changer veut dire `ansible-vault rekey` sur chaque fichier chiffré. Une valeur chiffrée seule ne peut pas passer par `rekey` : tu la chiffres à nouveau.'
 		]
 	},
 	task: {

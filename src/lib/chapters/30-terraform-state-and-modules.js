@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'State', def: 'Terraform\'s memory: which real object belongs to which block. A JSON file, `terraform.tfstate` by default. Never edit it by hand.' },
 		{ term: 'Backend', def: 'Where the state is stored. Local by default. A remote backend, like an S3 bucket or HCP Terraform, lets the team share one state.' },
-		{ term: 'State lock', def: 'Taken automatically on every operation that could write state. A second `apply` waits or fails instead of writing over the first.' },
+		{ term: 'State lock', def: 'If the backend supports locking (and it is turned on), Terraform takes it automatically on every operation that could write state. A second `apply` waits or fails instead of writing over the first.' },
 		{ term: 'Module', def: 'A folder of Terraform code you call with a `module` block. Your own folder is the **root module**, the ones you call are **child modules**.' },
 		{ term: 'Drift', def: 'The real infrastructure no longer matches the state, usually because someone changed it by hand in the console.' }
 	],
@@ -54,7 +54,7 @@ export default {
 					'aws -.->|"terraform plan -refresh-only"| s3b'
 				],
 				highlight: ['con', 'aws'],
-				note: '**Drift**: AWS no longer matches the state. `terraform plan -refresh-only` shows what changed outside Terraform without touching anything. Then you choose: put the code back with a normal `apply`, or write the change into the code.'
+				note: '**Drift**: AWS no longer matches the state. `terraform plan -refresh-only` shows what changed outside Terraform without touching anything. Then you choose: bring AWS back to what the code says with a normal `apply`, or write the change into the code.'
 			}
 		]
 	},
@@ -110,7 +110,7 @@ module "ec2_instances" {
 			'A versioned state bucket lets you get back an older state after a mistake.'
 		],
 		cost: [
-			'The state holds secrets **in plain text**, like database passwords. The bucket needs encryption and tight access.',
+			'The state can hold secrets **in plain text**, like database passwords. The bucket needs encryption and tight access.',
 			'A module is someone else\'s design. A major version bump can rename resources and propose destroying them: read the plan.',
 			'A crashed run can leave a lock behind. `terraform force-unlock` fixes it, but only use it on your own lock, or you get two writers.'
 		]

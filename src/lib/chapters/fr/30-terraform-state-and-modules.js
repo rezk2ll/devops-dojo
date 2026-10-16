@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'State', def: 'La mémoire de Terraform : quel objet réel correspond à quel bloc. Un fichier JSON, `terraform.tfstate` par défaut. Ne l’édite jamais à la main.' },
 		{ term: 'Backend', def: 'Là où le state est stocké. En local par défaut. Un backend distant, comme un bucket S3 ou HCP Terraform, permet à l’équipe de partager un seul state.' },
-		{ term: 'Verrou de state', def: 'Pris automatiquement à chaque opération qui pourrait écrire le state. Un deuxième `apply` attend ou échoue au lieu d’écraser le premier.' },
+		{ term: 'Verrou de state', def: 'Si le backend gère le verrou (et qu’il est activé), Terraform le prend automatiquement à chaque opération qui pourrait écrire le state. Un deuxième `apply` attend ou échoue au lieu d’écraser le premier.' },
 		{ term: 'Module', def: 'Un dossier de code Terraform que tu appelles avec un bloc `module`. Ton propre dossier est le **root module**, ceux que tu appelles sont des **child modules**.' },
 		{ term: 'Drift', def: 'L’infrastructure réelle ne correspond plus au state, en général parce que quelqu’un l’a modifiée à la main dans la console.' }
 	],
@@ -110,7 +110,7 @@ module "ec2_instances" {
 			'Un bucket de state versionné te permet de récupérer un ancien state après une erreur.'
 		],
 		cost: [
-			'Le state contient des secrets **en clair**, comme des mots de passe de base de données. Le bucket doit être chiffré et son accès restreint.',
+			'Le state peut contenir des secrets **en clair**, comme des mots de passe de base de données. Le bucket doit être chiffré et son accès restreint.',
 			'Un module, c’est la conception de quelqu’un d’autre. Une montée de version majeure peut renommer des resources et proposer de les détruire : lis le plan.',
 			'Une exécution plantée peut laisser un verrou derrière elle. `terraform force-unlock` le libère, mais utilise-le seulement sur ton propre verrou, sinon tu as deux écrivains.'
 		]
