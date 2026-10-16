@@ -112,7 +112,7 @@ resource "aws_instance" "app_server" {
 	tradeoff: {
 		gain: [
 			'Tu vois chaque changement avant qu’il arrive. La sortie de `plan` est parfaite à coller dans une pull request.',
-			'Supprime un bloc et le plan propose de le détruire. Le code est la liste complète de ce qui existe, rien n’est oublié derrière.',
+			'Supprime un bloc et le plan propose de le détruire. Le code est la liste complète de ce que Terraform gère, rien n’est oublié derrière.',
 			'Un outil, un langage pour des centaines d’API : AWS, DNS, GitHub, monitoring.'
 		],
 		cost: [
@@ -125,7 +125,7 @@ resource "aws_instance" "app_server" {
 		prompt: 'Ajoute à l’exemple un bucket S3 pour les sauvegardes, et tague l’instance avec le nom du bucket. Écris le nouveau bloc, la ligne modifiée, et prédis ce que `terraform plan` va afficher.',
 		hint: 'Utilise une référence au bucket dans les tags de l’instance. Que fait cette référence à l’ordre ?',
 		answer: [
-			'`resource "aws_s3_bucket" "backups" { bucket = "myteam-backups-1234" }`. Le nom doit être unique parmi tous les comptes AWS.',
+			'`resource "aws_s3_bucket" "backups" { bucket = "myteam-backups-1234" }`. Dans le namespace global partagé (celui par défaut), le nom doit être unique parmi tous les comptes AWS.',
 			'Dans l’instance : `tags = { Name = var.instance_name, Backups = aws_s3_bucket.backups.bucket }`.',
 			'La référence rend l’instance dépendante du bucket, donc le bucket est créé d’abord.',
 			'Plan : `+` pour `aws_s3_bucket.backups`, et `~` (modification sur place) pour `aws_instance.app_server`, parce que seul un tag change. Pas de `-/+`.'
@@ -163,7 +163,7 @@ resource "aws_instance" "app_server" {
 				'Rien tant que tu ne lances pas `terraform refresh`'
 			],
 			answer: 1,
-			why: '`-/+` veut dire qu’un argument modifié ne peut pas être changé sur place, donc Terraform détruit et recrée la resource. Tout ce qui est stocké sur cette instance part avec.'
+			why: '`-/+` veut dire que Terraform détruit la resource puis en crée une de remplacement, en général parce qu’un argument modifié ne peut pas être changé sur place. Tout ce qui est stocké sur cette instance part avec.'
 		}
 	],
 	takeaway: 'Terraform est déclaratif : tu écris ce qui doit exister, `plan` montre la différence, `apply` la rend réelle dans l’ordre que dictent les références. Lis chaque plan comme un diff.',

@@ -112,7 +112,7 @@ resource "aws_instance" "app_server" {
 	tradeoff: {
 		gain: [
 			'You see every change before it happens. `plan` output is a perfect thing to paste into a pull request.',
-			'Remove a block and the plan proposes destroying it. The code is the full list of what exists, nothing left behind.',
+			'Remove a block and the plan proposes destroying it. The code is the full list of what Terraform manages, nothing left behind.',
 			'One tool, one language for hundreds of APIs: AWS, DNS, GitHub, monitoring.'
 		],
 		cost: [
@@ -125,7 +125,7 @@ resource "aws_instance" "app_server" {
 		prompt: 'Add an S3 bucket for backups to the example, and tag the instance with the bucket name. Write the new block, the changed line, and predict what `terraform plan` will show.',
 		hint: 'Use a reference to the bucket in the instance tags. What does that reference do to the order?',
 		answer: [
-			'`resource "aws_s3_bucket" "backups" { bucket = "myteam-backups-1234" }`. The name must be unique across all AWS accounts.',
+			'`resource "aws_s3_bucket" "backups" { bucket = "myteam-backups-1234" }`. In the shared global namespace (the default), the name must be unique across all AWS accounts.',
 			'In the instance: `tags = { Name = var.instance_name, Backups = aws_s3_bucket.backups.bucket }`.',
 			'The reference makes the instance depend on the bucket, so the bucket is created first.',
 			'Plan: `+` for `aws_s3_bucket.backups`, and `~` (update in place) for `aws_instance.app_server`, because only a tag changes. No `-/+`.'
@@ -163,7 +163,7 @@ resource "aws_instance" "app_server" {
 				'Nothing until you run `terraform refresh`'
 			],
 			answer: 1,
-			why: '`-/+` means a changed argument cannot be updated in place, so Terraform destroys and recreates the resource. Anything stored on that instance goes with it.'
+			why: '`-/+` means Terraform destroys the resource and then creates a replacement, usually because a changed argument cannot be updated in place. Anything stored on that instance goes with it.'
 		}
 	],
 	takeaway: 'Terraform is declarative: you write what should exist, `plan` shows the difference, `apply` makes it real in the order the references imply. Read every plan like a diff.',

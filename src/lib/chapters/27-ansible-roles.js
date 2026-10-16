@@ -93,7 +93,7 @@ export default {
 		cost: [
 			'Variables can come from more than twenty places. Two people setting the same variable in two places will lose an afternoon to precedence.',
 			'Handlers run at the end of the play. If a later task needs the reloaded service, you must add `meta: flush_handlers`.',
-			'A vault password is a shared secret. Anyone who has it reads every secret it protects, and rotating it means `ansible-vault rekey` on each file.'
+			'A vault password is a shared secret. Anyone who has it reads every secret it protects, and rotating it means `ansible-vault rekey` on each encrypted file. Single encrypted values cannot be rekeyed: you encrypt them again.'
 		]
 	},
 	task: {
