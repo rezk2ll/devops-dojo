@@ -72,12 +72,12 @@ Please don't use \`git pull\` instead of the above \`fetch\` and
 \`rebase\`. Since \`git pull\` executes a merge, it creates merge commits. These make the commit history messy
 and violate the principle that commits ought to be individually understandable
 and useful (see below).
-…
+
 You might also consider changing your \`.git/config\` file via
 \`git config branch.autoSetupRebase always\` to change the behavior of \`git pull\`, or another non-merge option such as \`git pull --rebase\`.`,
 		notes: [
 			'Kubernetes picks **rebase** for keeping a branch in sync: `git fetch` downloads the new commits, `git rebase` replays your work on top. Your branch stays a straight line on top of `master`.',
-			'`git pull` is `fetch` plus `merge`. Every sync would add a merge commit that says nothing. That is the "messy" history they refuse.',
+			'The guide assumes `git pull` is `fetch` plus `merge`: every sync of a diverged branch would add a merge commit that says nothing. That is the "messy" history they refuse. Recent Git stops instead and asks you to pick `--rebase` or `--no-rebase`.',
 			'Rebase makes new commits, so the copy already on your fork no longer matches. That is why the same guide pushes with [`git push -f`](https://github.com/kubernetes/community/blob/440e496d3a172234d81728df1bfe43849b589adf/contributors/guide/github-workflow.md#L111-L118), and later with the safer `--force-with-lease`.',
 			'It is safe here because the branch is **yours alone**, on your fork. Pro Git\'s one rule: do not rebase commits that exist outside your repository and that people may have based work on.'
 		]
@@ -90,7 +90,7 @@ You might also consider changing your \`.git/config\` file via
 		],
 		cost: [
 			'Merge commits pile up. A log full of "Merge branch main into feature" hides the real changes.',
-			'Rebase rewrites hashes. You must force push, and anyone who built on the old commits gets a mess.',
+			'Rebase rewrites hashes. If the branch was already pushed, you must force push, and anyone who built on the old commits gets a mess.',
 			'The longer two branches live apart, the bigger the conflict when they meet.'
 		]
 	},

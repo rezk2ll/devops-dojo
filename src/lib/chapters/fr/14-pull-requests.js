@@ -16,7 +16,7 @@ export default {
 		{ term: 'Revue', def: 'Un relecteur commente, approuve ou demande des changements. Quand les revues sont obligatoires, la PR a besoin d’assez d’approbations pour être mergée.' },
 		{ term: 'Branche protégée', def: 'Une branche avec des règles : par défaut pas de force push ni de suppression, plus des règles en option comme les revues et les checks obligatoires.' },
 		{ term: 'Status check obligatoire', def: 'Un job de CI qui doit finir en succès, skipped ou neutral avant que la PR puisse être mergée.' },
-		{ term: 'CODEOWNERS', def: 'Un fichier qui associe des chemins à des personnes ou des équipes. Les owners sont sollicités automatiquement en revue quand une PR touche leurs fichiers.' }
+		{ term: 'CODEOWNERS', def: 'Un fichier qui associe des chemins à des personnes ou des équipes. Les owners sont sollicités automatiquement en revue quand une PR, une fois sortie du brouillon, touche leurs fichiers.' }
 	],
 	diagram: {
 		direction: 'LR',
@@ -84,7 +84,7 @@ export default {
 /LICENSE @nodejs/tsc
 /onboarding.md @nodejs/tsc`,
 		notes: [
-			'L’en-tête le dit clairement : ce fichier envoie des **pings de courtoisie**, il ne décide pas de ce qui peut être mergé. C’est CODEOWNERS tout seul. Il ne devient une barrière que quand la protection de branche active « Require review from Code Owners ».',
+			'L’en-tête le dit clairement : ce fichier envoie des **pings de courtoisie**, il ne décide pas de ce qui peut être mergé. C’est CODEOWNERS tout seul. Il ne devient une barrière que quand une règle de protection de branche (ou un ruleset, la forme plus récente des mêmes règles sur GitHub) active « Require review from Code Owners ».',
 			'Les owners sont **des équipes, jamais des personnes**. Les gens changent de poste, les équipes restent. GitHub exige aussi que chaque owner, équipe ou personne, ait l’accès en écriture au dépôt.',
 			'La ligne 13 rend le fichier propriétaire de lui-même : changer qui possède quoi demande l’équipe `@nodejs/tsc`. La doc GitHub présente un CODEOWNERS dans `.github/` qui se possède lui-même comme la méthode la plus sûre.',
 			'`/BUILDING.md` liste deux équipes. Quand la revue des code owners est obligatoire, **l’approbation d’un seul owner** suffit.',
@@ -123,7 +123,7 @@ export default {
 				'Il demande automatiquement la revue des owners sur les PR qui touchent leurs fichiers'
 			],
 			answer: 3,
-			why: 'CODEOWNERS ne fait qu’envoyer les demandes de revue. C’est une règle de protection avec « Require review from Code Owners » qui rend l’approbation obligatoire.'
+			why: 'CODEOWNERS ne fait qu’envoyer les demandes de revue. C’est une règle de protection ou un ruleset avec « Require review from Code Owners » qui rend l’approbation obligatoire.'
 		},
 		{
 			q: 'CODEOWNERS contient `* @acme/devs` en ligne 1 et `/prod/ @acme/ops` en ligne 2. Une PR ne change que `prod/hosts.ini`. Qui est sollicité pour la revue ?',

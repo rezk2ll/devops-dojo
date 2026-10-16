@@ -15,7 +15,7 @@ export default {
 		{ term: 'Trunk', def: 'The one shared branch everybody merges into, usually `main`.' },
 		{ term: 'Trunk-based development', def: 'Small changes merged into the trunk at least once a day, on short-lived branches or straight to the trunk.' },
 		{ term: 'Short-lived branch', def: 'A branch that lives hours, at most a day or two, then merges and is deleted.' },
-		{ term: 'GitFlow', def: 'A 2010 model with two permanent branches, `main` and `develop`, plus feature, release and hotfix branches.' },
+		{ term: 'GitFlow', def: 'A 2010 model with two permanent branches, `master` (often renamed `main` today) and `develop`, plus feature, release and hotfix branches.' },
 		{ term: 'Feature flag', def: 'A switch in the code that turns a feature on or off without a deploy. A release toggle hides unfinished work.' },
 		{ term: 'Code freeze', def: 'A period when nobody may merge, so the release can be stabilized. A sign of long-lived branches.' }
 	],
@@ -138,7 +138,7 @@ jobs:
 		{
 			q: 'In his 2020 note, when does GitFlow\'s author say it still fits?',
 			options: [
-				'Software that is explicitly versioned, with several versions supported in the wild',
+				'Software that is explicitly versioned, or with several versions supported in the wild',
 				'A web app deployed many times a day',
 				'Any team that hosts its code on GitHub',
 				'A team with no automated tests'

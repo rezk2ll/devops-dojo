@@ -72,12 +72,12 @@ Please don't use \`git pull\` instead of the above \`fetch\` and
 \`rebase\`. Since \`git pull\` executes a merge, it creates merge commits. These make the commit history messy
 and violate the principle that commits ought to be individually understandable
 and useful (see below).
-…
+
 You might also consider changing your \`.git/config\` file via
 \`git config branch.autoSetupRebase always\` to change the behavior of \`git pull\`, or another non-merge option such as \`git pull --rebase\`.`,
 		notes: [
 			'Kubernetes choisit le **rebase** pour garder une branche à jour : `git fetch` télécharge les nouveaux commits, `git rebase` rejoue ton travail par-dessus. Ta branche reste une ligne droite au-dessus de `master`.',
-			'`git pull`, c’est `fetch` plus `merge`. Chaque synchro ajouterait un commit de merge qui ne dit rien. C’est l’historique « messy » qu’ils refusent.',
+			'Le guide part du principe que `git pull`, c’est `fetch` plus `merge` : chaque synchro d’une branche qui a divergé ajouterait un commit de merge qui ne dit rien. C’est l’historique « messy » qu’ils refusent. Les versions récentes de Git s’arrêtent à la place et te demandent de choisir `--rebase` ou `--no-rebase`.',
 			'Le rebase crée de nouveaux commits, donc la copie déjà poussée sur ton fork ne correspond plus. C’est pour ça que le même guide pousse avec [`git push -f`](https://github.com/kubernetes/community/blob/440e496d3a172234d81728df1bfe43849b589adf/contributors/guide/github-workflow.md#L111-L118), et plus loin avec `--force-with-lease`, plus sûr.',
 			'Ici c’est sans risque parce que la branche est **à toi seul**, sur ton fork. La règle unique de Pro Git : ne rebase pas des commits qui existent en dehors de ton dépôt et sur lesquels d’autres ont pu baser leur travail.'
 		]
@@ -90,7 +90,7 @@ You might also consider changing your \`.git/config\` file via
 		],
 		cost: [
 			'Les commits de merge s’empilent. Un log plein de « Merge branch main into feature » cache les vrais changements.',
-			'Le rebase réécrit les hashes. Tu dois faire un force push, et quiconque a construit sur les anciens commits se retrouve dans le pétrin.',
+			'Le rebase réécrit les hashes. Si la branche était déjà poussée, tu dois faire un force push, et quiconque a construit sur les anciens commits se retrouve dans le pétrin.',
 			'Plus deux branches vivent longtemps séparées, plus le conflit est gros quand elles se retrouvent.'
 		]
 	},

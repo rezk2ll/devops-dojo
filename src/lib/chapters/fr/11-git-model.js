@@ -12,11 +12,11 @@ export default {
 		'Aujourd’hui : les trois endroits où un fichier peut se trouver (working tree, index, dépôt), et les noms qui pointent vers des commits : les **refs** et **HEAD**. Tout ce qui, en DevOps, « déploie depuis Git » repose là-dessus.'
 	],
 	terms: [
-		{ term: 'Commit', def: 'Un snapshot du projet entier, nommé par son hash SHA-1 (40 caractères hexadécimaux), avec auteur, message et un pointeur vers son commit parent.' },
+		{ term: 'Commit', def: 'Un snapshot du projet entier, nommé par son hash (par défaut SHA-1, 40 caractères hexadécimaux), avec auteur, message et un pointeur vers son commit parent.' },
 		{ term: 'Working tree', def: 'Les fichiers sur le disque, ceux que tu ouvres et modifies. Une version du projet extraite.' },
 		{ term: 'Index', def: 'Aussi appelé staging area. Un fichier dans `.git` qui contient ce qui ira dans ton prochain commit.' },
-		{ term: 'Dépôt', def: 'Le répertoire `.git` : tous les commits et les métadonnées. C’est ce que `git clone` copie.' },
-		{ term: 'Ref', def: 'Un nom pour un commit. Une branche comme `main` est une ref : un petit fichier, `refs/heads/main`, qui contient le hash d’un commit.' },
+		{ term: 'Dépôt', def: 'Le répertoire `.git` : tous les commits et les métadonnées. C’est son historique que `git clone` copie.' },
+		{ term: 'Ref', def: 'Un nom pour un commit. Une branche comme `main` est une ref, `refs/heads/main`, qui contient le hash d’un commit. Souvent c’est un petit fichier de ce nom ; après un `git gc`, elle peut se trouver dans `.git/packed-refs` à la place.' },
 		{ term: 'HEAD', def: 'La ref sur laquelle tu es en ce moment. En général un pointeur vers une branche, pas vers un commit.' }
 	],
 	diagram: {
@@ -46,7 +46,7 @@ export default {
 			{
 				add: ['main["main = refs/heads/main"] --> c2', 'head["HEAD"] --> main'],
 				highlight: ['main', 'head'],
-				note: 'La branche `main` est un fichier qui contient le hash du commit 2. **HEAD pointe vers main**, donc le prochain commit fait avancer main, et HEAD suit.'
+				note: 'La branche `main` est une ref qui contient le hash du commit 2. **HEAD pointe vers main**, donc le prochain commit fait avancer main, et HEAD suit.'
 			},
 			{
 				add: ['head -.->|"git checkout commit 1"| c1'],
@@ -88,7 +88,7 @@ crash.*.log
 		gain: [
 			'Chaque commit est un snapshot complet avec une somme de contrôle : tu peux retrouver n’importe quelle version, et Git détecte un fichier corrompu.',
 			'L’index te permet de commiter une partie de ton travail : le correctif part, le changement de debug reste.',
-			'Une branche est un tout petit fichier qui contient un hash, donc en créer une ne coûte rien.'
+			'Une branche est une toute petite ref qui contient un hash, donc en créer une ne coûte rien.'
 		],
 		cost: [
 			'L’historique n’oublie pas. Un secret commité une fois reste dans les anciens snapshots tant que personne ne réécrit l’historique.',
