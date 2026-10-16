@@ -54,7 +54,7 @@ export default {
 			{
 				add: ['sec["Secrets: secrets.DEPLOY_KEY"]', 'sec -.-> s3', 'class sec ext'],
 				highlight: ['sec'],
-				note: '**Secrets** live in the repo settings, not in the YAML. A step reads one with `${{ secrets.NAME }}`, and GitHub redacts its value from the logs.'
+				note: '**Secrets** live in the repo settings, not in the YAML. A step reads one with `${{ secrets.NAME }}`, and GitHub masks its value in the logs. Masking is best effort: a transformed secret (encoded, or inside JSON) can still leak.'
 			}
 		]
 	},
@@ -117,7 +117,7 @@ jobs:
 			'`needs: build`: the job waits for the build job, including every matrix copy, and is skipped if any of them fails.',
 			'`if: github.event_name == \'push\' && github.ref == \'refs/heads/main\'`: a pull request never deploys.',
 			'The key lives in the repo settings as a secret, never in the YAML. The step reads it with `env: DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}`.',
-			'Bonus: GitHub does not pass secrets (apart from `GITHUB_TOKEN`) to workflows triggered from a fork. A stranger\'s pull request cannot read your deploy key.'
+			'Bonus: GitHub does not pass secrets (apart from `GITHUB_TOKEN`, which is read-only there) to workflows triggered from a fork. A stranger\'s pull request cannot read your deploy key. The `pull_request_target` event is the exception: it runs in your repo\'s context, with your secrets, so never build the pull request\'s code in it.'
 		]
 	},
 	quiz: [

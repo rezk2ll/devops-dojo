@@ -54,7 +54,7 @@ export default {
 			{
 				add: ['sec["Secrets : secrets.DEPLOY_KEY"]', 'sec -.-> s3', 'class sec ext'],
 				highlight: ['sec'],
-				note: 'Les **secrets** vivent dans les paramètres du dépôt, pas dans le YAML. Un step en lit un avec `${{ secrets.NAME }}`, et GitHub masque sa valeur dans les logs.'
+				note: 'Les **secrets** vivent dans les paramètres du dépôt, pas dans le YAML. Un step en lit un avec `${{ secrets.NAME }}`, et GitHub masque sa valeur dans les logs. Ce masquage n’est pas garanti : un secret transformé (encodé, ou dans du JSON) peut quand même fuiter.'
 			}
 		]
 	},
@@ -117,7 +117,7 @@ jobs:
 			'`needs: build` : le job attend le job build, avec chaque copie de la matrice, et il est sauté si l’une d’elles échoue.',
 			'`if: github.event_name == \'push\' && github.ref == \'refs/heads/main\'` : une pull request ne déploie jamais.',
 			'La clé vit dans les paramètres du dépôt, comme secret, jamais dans le YAML. Le step la lit avec `env: DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}`.',
-			'Bonus : GitHub ne transmet pas les secrets (à part `GITHUB_TOKEN`) aux workflows lancés depuis un fork. La pull request d’un inconnu ne peut pas lire ta clé de déploiement.'
+			'Bonus : GitHub ne transmet pas les secrets (à part `GITHUB_TOKEN`, qui y est en lecture seule) aux workflows lancés depuis un fork. La pull request d’un inconnu ne peut pas lire ta clé de déploiement. L’événement `pull_request_target` est l’exception : il tourne dans le contexte de ton dépôt, avec tes secrets, donc ne construis jamais le code de la pull request dedans.'
 		]
 	},
 	quiz: [

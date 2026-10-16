@@ -25,12 +25,12 @@ export default {
 			{
 				add: ['v1["v1 en ligne sur 4 serveurs"] --> rec["Recreate : arrêter toute la v1, démarrer la v2"]'],
 				highlight: ['v1', 'rec'],
-				note: '**Recreate**, c’est ce que tu faisais à la main. Facile à comprendre : une seule version tourne à la fois. Le prix, c’est un trou sans service. Kubernetes le propose avec `strategy.type: Recreate`.'
+				note: '**Recreate**, c’est ce que tu faisais à la main. Facile à comprendre : une seule version tourne à la fois. Le prix, c’est un trou sans service. Kubernetes, que tu découvres au jour 31, le propose de base sous le nom `Recreate`.'
 			},
 			{
 				add: ['v1 --> roll["Rolling : remplacer 1 serveur à la fois"]'],
 				highlight: ['roll'],
-				note: '**Rolling** est le comportement par défaut d’un Deployment Kubernetes. Par défaut, au plus 25 % des pods sont indisponibles et au plus 25 % de pods en plus sont créés pendant la mise à jour. Pas de coupure, mais pendant un moment **la v1 et la v2 répondent toutes les deux**, donc elles doivent être compatibles.'
+				note: '**Rolling** est ce que Kubernetes fait par défaut : pendant la mise à jour, au plus 25 % des copies sont arrêtées et au plus 25 % de copies en plus sont démarrées. Pas de coupure, mais pendant un moment **la v1 et la v2 répondent toutes les deux**, donc elles doivent être compatibles.'
 			},
 			{
 				add: ['v1 --> bg["Blue-green : la v2 à côté de la v1, basculer le routeur"]'],
@@ -80,9 +80,9 @@ spec:
       - pause: {duration: 10}`,
 		notes: [
 			'Tu découvres Kubernetes au jour 31. Pour l’instant, lis ça comme « faire tourner 5 copies de l’application ». [Argo Rollouts](https://argoproj.github.io/argo-rollouts/) est un module Kubernetes qui ajoute le blue-green et le canary au rolling update intégré.',
-			'`setWeight: 20` envoie 20 % vers la nouvelle version. Sans routeur de trafic, Argo Rollouts y arrive [avec le nombre de pods](https://argoproj.github.io/argo-rollouts/features/canary/) : 20 % de 5 réplicas, c’est **1 nouveau pod et 4 anciens**.',
-			'`pause: {}` n’a pas de durée, donc le rollout **attend indéfiniment** qu’un humain lance `kubectl argo rollouts promote canary-demo`. C’est ton moment pour regarder les dashboards. Les pauses suivantes durent 10 secondes chacune.',
-			'`canaryService` est un Service qui n’envoie le trafic qu’aux pods canary, pour que tu puisses tester la v2 directement. Si la v2 a l’air mauvaise, [`kubectl argo rollouts abort`](https://argoproj.github.io/argo-rollouts/generated/kubectl-argo-rollouts/kubectl-argo-rollouts_abort/) annule les étapes et la version précédente redevient active.',
+			'`setWeight: 20` envoie 20 % vers la nouvelle version. Sans routeur de trafic, Argo Rollouts y arrive [en comptant les copies](https://argoproj.github.io/argo-rollouts/features/canary/) : 20 % de 5 copies, c’est **1 nouvelle copie et 4 anciennes**.',
+			'`pause: {}` n’a pas de durée, donc le rollout **attend indéfiniment** qu’un humain lance `kubectl argo rollouts promote canary-demo` (la ligne de commande d’Argo Rollouts). C’est ton moment pour regarder les dashboards. Les pauses suivantes durent 10 secondes chacune.',
+			'`canaryService` désigne une adresse stable (un Service Kubernetes) qui n’envoie le trafic qu’aux nouvelles copies, pour que tu puisses tester la v2 directement. Si la v2 a l’air mauvaise, [`kubectl argo rollouts abort`](https://argoproj.github.io/argo-rollouts/generated/kubectl-argo-rollouts/kubectl-argo-rollouts_abort/) annule les étapes et la version précédente redevient active. Mais le Rollout décrit toujours la v2 : remets-y l’ancienne version, sinon il retente la v2.',
 			'Le même dépôt a une [version blue-green](https://github.com/argoproj/rollouts-demo/blob/4e8c844fe9e23b7586f95b5f6b5365693cf318ad/examples/blue-green/bluegreen-rollout.yaml#L30-L34) : un `activeService` pour les utilisateurs, un `previewService` pour tester green, et `autoPromotionEnabled: false` pour que la bascule attende un humain.'
 		]
 	},
@@ -121,15 +121,15 @@ spec:
 			why: 'Les deux gardent l’ancienne version en marche. Blue-green bascule tout le monde d’un coup, avec un retour instantané. Canary expose d’abord quelques utilisateurs, donc une mauvaise version ne touche que cette part.'
 		},
 		{
-			q: 'Tu mets à jour un Deployment Kubernetes sans définir de `strategy`. Que fait Kubernetes ?',
+			q: 'Kubernetes (jour 31) fait tourner plusieurs copies de ton application. Tu y livres une nouvelle version sans choisir de stratégie. Que fait Kubernetes ?',
 			options: [
-				'Recreate : tuer tous les anciens pods, puis démarrer les nouveaux',
+				'Recreate : tuer toutes les anciennes copies, puis démarrer les nouvelles',
 				'Blue-green : démarrer une copie complète, puis basculer',
-				'Rolling update : remplacer les pods progressivement, avec 25 % de max unavailable et 25 % de max surge par défaut',
+				'Rolling update : remplacer les copies progressivement, avec au plus 25 % arrêtées et au plus 25 % en plus par défaut',
 				'Rien tant que tu n’as pas validé le changement'
 			],
 			answer: 2,
-			why: '`RollingUpdate` est la stratégie par défaut, et `maxUnavailable` comme `maxSurge` valent 25 % par défaut. `Recreate` doit être demandé.'
+			why: 'Le rolling update est la stratégie par défaut, et les deux limites (`maxUnavailable` et `maxSurge`) valent 25 % par défaut. `Recreate` doit être demandé.'
 		},
 		{
 			q: 'Une nouvelle page de paiement est déployée en production, mais cachée derrière un feature flag éteint. Qu’est-ce qui est vrai ?',

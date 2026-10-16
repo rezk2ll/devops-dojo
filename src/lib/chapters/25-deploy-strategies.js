@@ -25,12 +25,12 @@ export default {
 			{
 				add: ['v1["v1 live on 4 servers"] --> rec["Recreate: stop all v1, start v2"]'],
 				highlight: ['v1', 'rec'],
-				note: '**Recreate** is what you did by hand. Easy to reason about: only one version ever runs. The cost is a gap with no service. Kubernetes has it as `strategy.type: Recreate`.'
+				note: '**Recreate** is what you did by hand. Easy to reason about: only one version ever runs. The cost is a gap with no service. Kubernetes, which you meet on day 31, has it built in as `Recreate`.'
 			},
 			{
 				add: ['v1 --> roll["Rolling: replace 1 server at a time"]'],
 				highlight: ['roll'],
-				note: '**Rolling** is the Kubernetes Deployment default. By default at most 25% of pods are unavailable and at most 25% extra are created during the update. No downtime, but for a while **v1 and v2 both answer users**, so they must be compatible.'
+				note: '**Rolling** is what Kubernetes does by default: during the update, at most 25% of the copies are down and at most 25% extra copies are started. No downtime, but for a while **v1 and v2 both answer users**, so they must be compatible.'
 			},
 			{
 				add: ['v1 --> bg["Blue-green: v2 beside v1, switch the router"]'],
@@ -80,9 +80,9 @@ spec:
       - pause: {duration: 10}`,
 		notes: [
 			'You meet Kubernetes on day 31. For now, read this as "run 5 copies of the app". [Argo Rollouts](https://argoproj.github.io/argo-rollouts/) is a Kubernetes add-on that adds blue-green and canary to the built-in rolling update.',
-			'`setWeight: 20` sends 20% to the new version. With no traffic router, Argo Rollouts gets there [with pod counts](https://argoproj.github.io/argo-rollouts/features/canary/): 20% of 5 replicas is **1 new pod and 4 old ones**.',
-			'`pause: {}` has no duration, so the rollout **waits forever** until a human runs `kubectl argo rollouts promote canary-demo`. That is your moment to check the dashboards. The later pauses are 10 seconds each.',
-			'`canaryService` is a Service that sends traffic only to the canary pods, so you can test v2 directly. If v2 looks bad, [`kubectl argo rollouts abort`](https://argoproj.github.io/argo-rollouts/generated/kubectl-argo-rollouts/kubectl-argo-rollouts_abort/) reverts the steps and the previous version is active again.',
+			'`setWeight: 20` sends 20% to the new version. With no traffic router, Argo Rollouts gets there [by counting copies](https://argoproj.github.io/argo-rollouts/features/canary/): 20% of 5 copies is **1 new copy and 4 old ones**.',
+			'`pause: {}` has no duration, so the rollout **waits forever** until a human runs `kubectl argo rollouts promote canary-demo` (the Argo Rollouts command line). That is your moment to check the dashboards. The later pauses are 10 seconds each.',
+			'`canaryService` names a stable address (a Kubernetes Service) that sends traffic only to the new copies, so you can test v2 directly. If v2 looks bad, [`kubectl argo rollouts abort`](https://argoproj.github.io/argo-rollouts/generated/kubectl-argo-rollouts/kubectl-argo-rollouts_abort/) reverts the steps and the previous version is active again. The Rollout still describes v2, though: put the old version back in it, or it tries v2 again.',
 			'The same repo has a [blue-green version](https://github.com/argoproj/rollouts-demo/blob/4e8c844fe9e23b7586f95b5f6b5365693cf318ad/examples/blue-green/bluegreen-rollout.yaml#L30-L34): an `activeService` for users, a `previewService` for testing green, and `autoPromotionEnabled: false` so the switch waits for a human.'
 		]
 	},
@@ -121,15 +121,15 @@ spec:
 			why: 'Both keep the old version running. Blue-green flips everyone at once, with an instant flip back. Canary exposes a few users first, so a bad release hurts only that share.'
 		},
 		{
-			q: 'You update a Kubernetes Deployment and set no `strategy`. What does Kubernetes do?',
+			q: 'Kubernetes (day 31) runs several copies of your app. You ship a new version there and choose no strategy. What does Kubernetes do?',
 			options: [
-				'Recreate: kill all old pods, then start new ones',
+				'Recreate: kill all old copies, then start new ones',
 				'Blue-green: start a full copy, then switch',
-				'Rolling update: replace pods progressively, with 25% max unavailable and 25% max surge by default',
+				'Rolling update: replace copies progressively, with at most 25% down and at most 25% extra by default',
 				'Nothing until you approve the change'
 			],
 			answer: 2,
-			why: '`RollingUpdate` is the default strategy, and both `maxUnavailable` and `maxSurge` default to 25%. `Recreate` must be asked for.'
+			why: 'Rolling update is the default strategy, and both limits (`maxUnavailable` and `maxSurge`) default to 25%. `Recreate` must be asked for.'
 		},
 		{
 			q: 'A new checkout page is deployed to production, but hidden behind a feature flag that is off. What is true?',
