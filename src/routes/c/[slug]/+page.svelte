@@ -219,7 +219,7 @@
 					class="h-auto w-full justify-start py-3 text-left text-base whitespace-normal"
 					disabled={done && i !== q.answer && i !== picked[id]}
 					onclick={() => pick(id, q, i)}
-					><kbd class="mr-1 font-mono text-xs opacity-60">{i + 1}</kbd>{@html fmt(option)}</Button
+					><kbd class="mr-1 font-mono text-xs opacity-60">{i + 1}</kbd><span>{@html fmt(option)}</span></Button
 				>
 			{/each}
 		</div>

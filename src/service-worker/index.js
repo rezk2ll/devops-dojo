@@ -3,7 +3,12 @@ import { immutable, assets, prerendered } from '$app/manifest';
 import { version } from '$app/env';
 import { asset, resolve } from '$app/paths';
 
-const CACHE = `cache-${version}`;
+// Sites under one origin (user.github.io/a, /b) share Cache Storage, so names carry this site's scope.
+const PREFIX = `${self.registration.scope}#`;
+const CACHE = `${PREFIX}${version}`;
+// `cache-` is the unscoped name earlier versions of this site used.
+/** @param {string} key */
+const stale = (key) => (key.startsWith(PREFIX) && key !== CACHE) || key.startsWith('cache-');
 
 // Hashed files never change, so they are served from the cache. Pages change on every deploy,
 // so they go to the network first and fall back to the cache offline.
@@ -28,7 +33,7 @@ self.addEventListener('activate', (event) => {
 	event.waitUntil(
 		caches
 			.keys()
-			.then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+			.then((keys) => Promise.all(keys.filter(stale).map((key) => caches.delete(key))))
 			.then(() => self.clients.claim())
 	);
 });

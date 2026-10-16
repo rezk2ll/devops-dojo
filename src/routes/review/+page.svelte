@@ -119,7 +119,7 @@
 						variant={done && n === q.answer ? 'default' : done && n === picked ? 'destructive' : 'outline'}
 						class="h-auto w-full justify-start py-2 text-left whitespace-normal"
 						disabled={done && n !== q.answer && n !== picked}
-						onclick={() => pick(n)}>{@html fmt(option)}</Button
+						onclick={() => pick(n)}><span>{@html fmt(option)}</span></Button
 					>
 				{/each}
 				{#if picked !== undefined}
