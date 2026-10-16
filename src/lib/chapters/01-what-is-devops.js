@@ -15,8 +15,8 @@ export default {
 		{ term: 'DevOps', def: 'A mix of culture, practices and tools that lets one organization deliver and run software fast and reliably. Dev and ops share the goal instead of passing work over a wall.' },
 		{ term: 'Silo', def: 'A team that works for its own goal, with its own tools and words, and talks to other teams only through tickets.' },
 		{ term: 'CALMS', def: 'Culture, Automation, Lean, Measurement, Sharing. A checklist to see how far a team has really moved toward DevOps.' },
-		{ term: 'You build it, you run it', def: 'The people who write a service also take part in running it, pager included. Devs and ops pair through the whole life of the app.' },
-		{ term: 'DevOps team silo', def: 'The anti-pattern: a new team called "DevOps" placed between dev and ops. It becomes a third wall.' }
+		{ term: 'You build it, you run it', def: 'The people who write a service also take part in running it, pager included.' },
+		{ term: 'DevOps team silo', def: 'The anti-pattern: a new team called "DevOps" placed between dev and ops. It becomes another silo and keeps dev and ops further apart.' }
 	],
 	diagram: {
 		direction: 'LR',
@@ -90,7 +90,7 @@ export default {
       db:
         condition: service_healthy`,
 		notes: [
-			'This is knowledge an ops person used to keep in a wiki or in their head: start the database first, check it answers, restart things that crash. Here it is **a file in the app repo**, next to the code, changed through the same review.',
+			'This is knowledge an ops person used to keep in a wiki or in their head: start the database first, check it answers, restart things that crash. Here it is **a file in the app repo**, next to the code, changed through the same review. You will learn Compose in part 4.',
 			'`condition: service_healthy` tells Compose to wait until the `db` healthcheck passes before it starts `backend` ([Compose docs](https://docs.docker.com/reference/compose-file/services/)). The start order is written down, not remembered.',
 			'`restart: always` restarts the container until it is removed. You know this idea from `Restart=always` in a systemd unit. Same intent, now visible to the developer too.',
 			'The file is not DevOps. Docker Compose is a tool. **DevOps is that dev and ops both read, change and own this file.** A tool can make sharing easier. It cannot make people share.'

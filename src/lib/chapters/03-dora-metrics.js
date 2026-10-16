@@ -73,7 +73,7 @@ GROUP BY 1,2
 HAVING max(bug) is True
 ;`,
 		notes: [
-			'Four Keys is an open-source project from the DORA team to compute the metrics from GitHub, GitLab or PagerDuty events in BigQuery. The repo is **archived** and its README still lists the old four names, such as "Time to Restore Services". Read it for the idea, not as the current definitions.',
+			'Four Keys is an open-source project from the DORA team to compute the metrics in BigQuery from events sent by tools such as GitHub, GitLab or PagerDuty. The repo is **archived** and its README still lists the old four names, such as "Time to Restore Services". Read it for the idea, not as the current definitions.',
 			'An incident is a GitHub or GitLab issue with the label `Incident`, or any PagerDuty event. **No label, no incident**: a failure handled in a chat channel never reaches the numbers.',
 			'The link between a failure and a deployment is plain text: the event must contain `root cause: <commit id>`. The `LEFT JOIN` matches that id against the commits each deployment shipped. This is how a failure gets blamed on a deploy, and it depends on people writing that line.',
 			'`time_created` takes the earlier of the deploy time and the issue time. So recovery is measured from the deployment that caused the failure until the issue is closed, which is how the [README](https://github.com/dora-team/fourkeys/blob/6cc642e037a95a280ed8d3b1624dd003b647d797/README.md?plain=1#L416-L418) defines it.'
@@ -98,7 +98,7 @@ HAVING max(bug) is True
 			'**Deployment frequency:** 20 in 4 weeks, so about 5 per week.',
 			'**Change fail rate:** 3 / 20 = 15%. **Deployment rework rate:** 2 / 20 = 10%.',
 			'**Failed deployment recovery time:** median of 30 min, 40 min, 2 h = 40 min.',
-			'**Change lead time:** about 3 days, almost all of it waiting between merge and deploy.',
+			'**Change lead time:** at least 3 days: Monday merge to Thursday deploy, plus any time the commit spent in review before the merge.',
 			'Work on **lead time** first: code that is done sits for three days. Ask what it waits for (a release day? a manual approval? a shared test environment?). Shorter waits also mean smaller batches, which tends to lower the fail rate too. And do not announce a target number: improve the process and watch the metric.'
 		]
 	},
@@ -120,7 +120,7 @@ HAVING max(bug) is True
 				'It now measures the time to detect a failure instead of the time to fix it',
 				'It is now counted only for the database tier',
 				'It only counts recovery from failures caused by a change to production, not external events like a data center outage',
-				'It was removed from the stability measures entirely'
+				'It was dropped from DORA\'s metrics entirely'
 			],
 			answer: 2,
 			why: 'The old metric mixed failures caused by a deployment with failures from outside. The new one focuses on recovering from a change that went wrong, like the other delivery metrics.'

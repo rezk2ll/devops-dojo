@@ -73,7 +73,7 @@ GROUP BY 1,2
 HAVING max(bug) is True
 ;`,
 		notes: [
-			'Four Keys est un projet open source de l’équipe DORA pour calculer les métriques à partir d’événements GitHub, GitLab ou PagerDuty dans BigQuery. Le dépôt est **archivé** et son README liste encore les quatre anciens noms, comme « Time to Restore Services ». Lis-le pour l’idée, pas pour les définitions actuelles.',
+			'Four Keys est un projet open source de l’équipe DORA pour calculer les métriques dans BigQuery à partir d’événements envoyés par des outils comme GitHub, GitLab ou PagerDuty. Le dépôt est **archivé** et son README liste encore les quatre anciens noms, comme « Time to Restore Services ». Lis-le pour l’idée, pas pour les définitions actuelles.',
 			'Un incident, c’est une issue GitHub ou GitLab avec le label `Incident`, ou n’importe quel événement PagerDuty. **Pas de label, pas d’incident** : une panne gérée dans un canal de chat n’arrive jamais dans les chiffres.',
 			'Le lien entre une panne et un déploiement est du simple texte : l’événement doit contenir `root cause: <id du commit>`. Le `LEFT JOIN` compare cet id aux commits livrés par chaque déploiement. C’est comme ça qu’une panne est attribuée à un déploiement, et ça dépend de gens qui écrivent cette ligne.',
 			'`time_created` prend le plus tôt entre l’heure du déploiement et celle de l’issue. Le rétablissement se mesure donc du déploiement qui a causé la panne jusqu’à la fermeture de l’issue, comme le définit le [README](https://github.com/dora-team/fourkeys/blob/6cc642e037a95a280ed8d3b1624dd003b647d797/README.md?plain=1#L416-L418).'
@@ -98,7 +98,7 @@ HAVING max(bug) is True
 			'**Deployment frequency :** 20 en 4 semaines, donc environ 5 par semaine.',
 			'**Change fail rate :** 3 / 20 = 15 %. **Deployment rework rate :** 2 / 20 = 10 %.',
 			'**Failed deployment recovery time :** médiane de 30 min, 40 min, 2 h = 40 min.',
-			'**Change lead time :** environ 3 jours, presque entièrement de l’attente entre le merge et le déploiement.',
+			'**Change lead time :** au moins 3 jours : du merge le lundi au déploiement le jeudi, plus le temps que le commit a passé en revue avant le merge.',
 			'Travaille d’abord le **lead time** : du code terminé attend trois jours. Demande-toi ce qu’il attend (un jour de release ? une validation manuelle ? un environnement de test partagé ?). Moins d’attente veut aussi dire des lots plus petits, ce qui tend à faire baisser le taux d’échec. Et n’annonce pas de chiffre cible : améliore le processus et observe la métrique.'
 		]
 	},
@@ -120,7 +120,7 @@ HAVING max(bug) is True
 				'Elle mesure maintenant le temps pour détecter une panne au lieu du temps pour la corriger',
 				'Elle n’est plus comptée que pour la couche base de données',
 				'Elle ne compte que le rétablissement après des pannes causées par un changement en prod, pas des événements extérieurs comme une panne de datacenter',
-				'Elle a été retirée des mesures de stabilité'
+				'Elle a été retirée des métriques DORA'
 			],
 			answer: 2,
 			why: 'L’ancienne métrique mélangeait les pannes causées par un déploiement et les pannes venues de l’extérieur. La nouvelle se concentre sur le rétablissement après un changement raté, comme les autres métriques de livraison.'
