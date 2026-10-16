@@ -1,0 +1,10 @@
+{
+	"name": "DevOps Dojo",
+	"description": "From sysadmin to DevOps engineer, one 10-minute chapter a day, taught on real open-source code.",
+	"start_url": "./",
+	"scope": "./",
+	"display": "standalone",
+	"background_color": "#f4f7fa",
+	"theme_color": "#1d2430",
+	"icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
