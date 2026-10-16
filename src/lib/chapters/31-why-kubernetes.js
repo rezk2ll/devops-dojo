@@ -66,7 +66,7 @@ export default {
 			{
 				add: [],
 				highlight: ['cm', 'k1', 'k2'],
-				note: 'Node 2 dies. By default its Pods stay bound to it for [5 minutes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/), in case it comes back. Then they are evicted: current state two, desired state three. The controller creates a new Pod, and the scheduler places it on node 1. **Nobody was paged.**'
+				note: 'Node 2 dies. After [about 50 seconds](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/) without news, the control plane marks it unreachable. By default its Pods then stay bound to it for [5 more minutes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/), in case it comes back. Then they are evicted: current state two, desired state three. The controller creates a new Pod, and the scheduler places it on node 1. **Nobody was paged.**'
 			}
 		]
 	},
@@ -94,9 +94,12 @@ export default {
 	// current state of the world
 	err = c.updateFooStatus(ctx, foo, deployment)`,
 		notes: [
-			'You do not need to read Go to see the shape. This is the official example controller from the Kubernetes project. It watches a made-up object called `Foo` and keeps a Deployment in line with it.',
-			'Three moves, the same as your cron job: **get** the real thing, **create** it if it is missing, **update** it if it differs from what `Foo.spec` asks. Then write what it saw into `status`.',
-			'It does not run on a timer alone. It [registers handlers](https://github.com/kubernetes/sample-controller/blob/c99d43fac02d529e9b7421265d90162fcde92cf5/controller.go#L128-L153) for add, update and delete events, so a change wakes it up right away.',
+			'This is the official example controller from the Kubernetes project. It watches a made-up object called `Foo` and keeps a Deployment in line with it. You do not need to write Go: read it as a recipe, one block at a time. Lines starting with `//` are comments.',
+			'**Get.** `deploymentsLister...Get(deploymentName)` reads the Deployment from a local copy (a cache) of what the API server holds. `deployment, err := ...` keeps two results: the Deployment, and an error if something went wrong.',
+			'**Create if missing.** `errors.IsNotFound(err)` is true when no such Deployment exists. Then `...Create(ctx, newDeployment(foo), ...)` asks the API server to create it, and `newDeployment(foo)` builds the wanted Deployment from what `Foo.spec` says. You can skip `ctx` and the options at the end. The `…` lines are cut: they stop on errors and check that the Deployment belongs to this `Foo`.',
+			'**Update if different.** `!=` means "not equal", `&&` means "and", `nil` means "not set", and a `*` in front of a name reads the value it points to. So: if `Foo` sets a replica count, and it differs from the Deployment\'s, send an `Update` with the wanted Deployment. `logger.V(4).Info` only writes a debug log line.',
+			'**Report.** `updateFooStatus` writes what it saw into the `status` of `Foo`. The same three moves as your cron job: look, fix the gap, report.',
+			'It does not run on a timer alone. It [registers handlers](https://github.com/kubernetes/sample-controller/blob/c99d43fac02d529e9b7421265d90162fcde92cf5/controller.go#L128-L153), so a change to a `Foo`, or to a Deployment, wakes it up right away.',
 			'The built-in controllers that run Deployments and ReplicaSets follow the same pattern. Kubernetes is **many small loops**, each owning one kind of object.'
 		]
 	},

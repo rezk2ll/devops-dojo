@@ -66,7 +66,7 @@ export default {
 			{
 				add: [],
 				highlight: ['cm', 'k1', 'k2'],
-				note: 'Le node 2 meurt. Par défaut, ses Pods lui restent attachés [5 minutes](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/), au cas où il revienne. Puis ils sont évincés : état actuel deux, état désiré trois. Le contrôleur crée un nouveau Pod, et le scheduler le place sur le node 1. **Personne n’a été réveillé.**'
+				note: 'Le node 2 meurt. Après [environ 50 secondes](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/) sans nouvelles, le control plane le marque injoignable. Par défaut, ses Pods lui restent alors attachés [5 minutes de plus](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/), au cas où il revienne. Puis ils sont évincés : état actuel deux, état désiré trois. Le contrôleur crée un nouveau Pod, et le scheduler le place sur le node 1. **Personne n’a été réveillé.**'
 			}
 		]
 	},
@@ -94,9 +94,12 @@ export default {
 	// current state of the world
 	err = c.updateFooStatus(ctx, foo, deployment)`,
 		notes: [
-			'Pas besoin de lire le Go pour voir la forme. C’est le contrôleur d’exemple officiel du projet Kubernetes. Il surveille un objet inventé appelé `Foo` et garde un Deployment aligné dessus.',
-			'Trois gestes, comme ton cron : **lire** la vraie chose, la **créer** si elle manque, la **mettre à jour** si elle diffère de ce que demande `Foo.spec`. Puis écrire ce qu’il a vu dans `status`.',
-			'Il ne tourne pas seulement sur un minuteur. Il [enregistre des handlers](https://github.com/kubernetes/sample-controller/blob/c99d43fac02d529e9b7421265d90162fcde92cf5/controller.go#L128-L153) pour les événements d’ajout, de mise à jour et de suppression, donc un changement le réveille tout de suite.',
+			'C’est le contrôleur d’exemple officiel du projet Kubernetes. Il surveille un objet inventé appelé `Foo` et garde un Deployment aligné dessus. Pas besoin d’écrire du Go : lis-le comme une recette, un bloc à la fois. Les lignes qui commencent par `//` sont des commentaires.',
+			'**Lire.** `deploymentsLister...Get(deploymentName)` lit le Deployment dans une copie locale (un cache) de ce que contient l’API server. `deployment, err := ...` garde deux résultats : le Deployment, et une erreur si quelque chose a mal tourné.',
+			'**Créer s’il manque.** `errors.IsNotFound(err)` est vrai quand ce Deployment n’existe pas. Alors `...Create(ctx, newDeployment(foo), ...)` demande à l’API server de le créer, et `newDeployment(foo)` construit le Deployment voulu à partir de ce que dit `Foo.spec`. Tu peux ignorer `ctx` et les options à la fin. Les lignes `…` sont coupées : elles s’arrêtent sur les erreurs et vérifient que le Deployment appartient bien à ce `Foo`.',
+			'**Mettre à jour s’il diffère.** `!=` veut dire « différent de », `&&` veut dire « et », `nil` veut dire « pas défini », et une `*` devant un nom lit la valeur vers laquelle il pointe. Donc : si `Foo` fixe un nombre de réplicas, et qu’il diffère de celui du Deployment, envoie un `Update` avec le Deployment voulu. `logger.V(4).Info` écrit seulement une ligne de log de debug.',
+			'**Rendre compte.** `updateFooStatus` écrit ce qu’il a vu dans le `status` de `Foo`. Les trois mêmes gestes que ton cron : regarder, corriger l’écart, rendre compte.',
+			'Il ne tourne pas seulement sur un minuteur. Il [enregistre des handlers](https://github.com/kubernetes/sample-controller/blob/c99d43fac02d529e9b7421265d90162fcde92cf5/controller.go#L128-L153), donc un changement sur un `Foo`, ou sur un Deployment, le réveille tout de suite.',
 			'Les contrôleurs intégrés qui gèrent les Deployments et les ReplicaSets suivent le même schéma. Kubernetes, c’est **plein de petites boucles**, chacune responsable d’un type d’objet.'
 		]
 	},

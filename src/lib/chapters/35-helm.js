@@ -139,7 +139,7 @@ spec:
 			why: 'A chart is the package. A release is one instance of it running in a cluster. Install the same chart twice and you have two releases.'
 		},
 		{
-			q: 'You run `helm install -f a.yaml -f b.yaml --set replicas=5`. Both files set `replicas`. Which value wins?',
+			q: 'You run `helm install my-app ./chart -f a.yaml -f b.yaml --set replicas=5`. Both files set `replicas`. Which value wins?',
 			options: ['The one in `a.yaml`', 'The one in `b.yaml`', '`5`', 'The chart default in `values.yaml`'],
 			answer: 2,
 			why: 'Chart defaults are overridden by `-f` files (rightmost wins among them), and `--set` overrides them all.'
