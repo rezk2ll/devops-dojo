@@ -29,7 +29,7 @@ export default {
 			{
 				add: ['tag -->|"git push origin v1.4.0"| remote[("Remote: GitHub")]'],
 				highlight: ['remote'],
-				note: '**`git push` does not send tags by default.** Push the tag by name, or use `git push --follow-tags` to send the annotated tags that point at the commits you push.'
+				note: '**`git push` does not send tags by default.** Push the tag by name, or use `git push --follow-tags` to send the annotated tags that point at commits reachable from what you push.'
 			},
 			{
 				add: ['remote -->|"release published"| ci["CI release job"]', 'ci --> art["artifacts: package, binary, image"]'],
@@ -157,7 +157,7 @@ jobs:
 				'The tag must be signed before it can be pushed'
 			],
 			answer: 0,
-			why: 'Tags are pushed explicitly, by name, with `--tags`, or with `--follow-tags` for annotated tags on the pushed commits.'
+			why: 'Tags are pushed explicitly, by name, with `--tags`, or with `--follow-tags` for annotated tags reachable from the pushed commits.'
 		},
 		{
 			q: 'Version 1.4.2 gets a new optional flag and nothing else changes. What is the next version under semantic versioning?',

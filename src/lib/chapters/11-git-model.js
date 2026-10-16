@@ -12,11 +12,11 @@ export default {
 		'Today: the three places a file can sit (working tree, index, repository), and the names that point at commits: **refs** and **HEAD**. Everything in DevOps that "deploys from Git" stands on this.'
 	],
 	terms: [
-		{ term: 'Commit', def: 'A snapshot of the whole project, named by its SHA-1 hash (40 hex characters), with author, message and a pointer to its parent commit.' },
+		{ term: 'Commit', def: 'A snapshot of the whole project, named by its hash (by default SHA-1, 40 hex characters), with author, message and a pointer to its parent commit.' },
 		{ term: 'Working tree', def: 'The files on disk that you open and edit. One checked out version of the project.' },
 		{ term: 'Index', def: 'Also called the staging area. A file inside `.git` that holds what will go into your next commit.' },
-		{ term: 'Repository', def: 'The `.git` directory: every commit and the metadata. It is what `git clone` copies.' },
-		{ term: 'Ref', def: 'A name for a commit. A branch like `main` is a ref: a small file, `refs/heads/main`, that holds one commit hash.' },
+		{ term: 'Repository', def: 'The `.git` directory: every commit and the metadata. Its history is what `git clone` copies.' },
+		{ term: 'Ref', def: 'A name for a commit. A branch like `main` is a ref, `refs/heads/main`, that holds one commit hash. Often it is a small file of that name; after `git gc` it can sit in `.git/packed-refs` instead.' },
 		{ term: 'HEAD', def: 'Which ref you are on right now. Usually a pointer to a branch, not to a commit.' }
 	],
 	diagram: {
@@ -46,7 +46,7 @@ export default {
 			{
 				add: ['main["main = refs/heads/main"] --> c2', 'head["HEAD"] --> main'],
 				highlight: ['main', 'head'],
-				note: 'The branch `main` is a file that holds the hash of commit 2. **HEAD points at main**, so the next commit moves main forward, and HEAD follows.'
+				note: 'The branch `main` is a ref that holds the hash of commit 2. **HEAD points at main**, so the next commit moves main forward, and HEAD follows.'
 			},
 			{
 				add: ['head -.->|"git checkout commit 1"| c1'],
@@ -88,7 +88,7 @@ crash.*.log
 		gain: [
 			'Every commit is a full snapshot with a checksum: you can get back any version, and Git detects a corrupted file.',
 			'The index lets you commit part of your work: the fix goes in, the debug change stays out.',
-			'A branch is a tiny file holding one hash, so making one costs nothing.'
+			'A branch is a tiny ref holding one hash, so making one costs nothing.'
 		],
 		cost: [
 			'History does not forget. A secret committed once stays in old snapshots until someone rewrites history.',

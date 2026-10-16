@@ -16,7 +16,7 @@ export default {
 		{ term: 'Review', def: 'A reviewer comments, approves, or requests changes. When reviews are required, the PR needs enough approvals to merge.' },
 		{ term: 'Protected branch', def: 'A branch with rules: by default no force push and no deletion, plus optional rules like required reviews and checks.' },
 		{ term: 'Required status check', def: 'A CI job that must end successful, skipped or neutral before the PR can merge.' },
-		{ term: 'CODEOWNERS', def: 'A file mapping paths to people or teams. Owners are requested for review automatically when a PR touches their files.' }
+		{ term: 'CODEOWNERS', def: 'A file mapping paths to people or teams. Owners are requested for review automatically when a PR, once out of draft, touches their files.' }
 	],
 	diagram: {
 		direction: 'LR',
@@ -84,7 +84,7 @@ export default {
 /LICENSE @nodejs/tsc
 /onboarding.md @nodejs/tsc`,
 		notes: [
-			'The header says it plainly: this file sends **courtesy pings**, it does not decide what can merge. That is CODEOWNERS on its own. It only becomes a gate when branch protection turns on "Require review from Code Owners".',
+			'The header says it plainly: this file sends **courtesy pings**, it does not decide what can merge. That is CODEOWNERS on its own. It only becomes a gate when a branch protection rule (or a ruleset, GitHub\'s newer form of the same rules) turns on "Require review from Code Owners".',
 			'Owners are **teams, never individuals**. People change jobs, teams stay. GitHub also requires each owner, team or person, to have write access to the repository.',
 			'Line 13 makes the file own itself: changing who owns what needs the `@nodejs/tsc` team. GitHub\'s docs call a CODEOWNERS in `.github/` that owns itself the most secure setup.',
 			'`/BUILDING.md` lists two teams. When code owner review is required, **an approval from any one owner** is enough.',
@@ -123,7 +123,7 @@ export default {
 				'It automatically requests the owners as reviewers on PRs that touch their files'
 			],
 			answer: 3,
-			why: 'CODEOWNERS only routes review requests. A branch protection rule with "Require review from Code Owners" is what makes the approval mandatory.'
+			why: 'CODEOWNERS only routes review requests. A branch protection rule or a ruleset with "Require review from Code Owners" is what makes the approval mandatory.'
 		},
 		{
 			q: 'CODEOWNERS has `* @acme/devs` on line 1 and `/prod/ @acme/ops` on line 2. A PR changes only `prod/hosts.ini`. Who is requested for review?',

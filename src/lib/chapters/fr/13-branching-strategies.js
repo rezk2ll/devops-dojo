@@ -15,7 +15,7 @@ export default {
 		{ term: 'Trunk', def: 'La branche partagée unique dans laquelle tout le monde merge, en général `main`.' },
 		{ term: 'Trunk-based development', def: 'De petits changements mergés dans le trunk au moins une fois par jour, via des branches courtes ou directement sur le trunk.' },
 		{ term: 'Branche courte', def: 'Une branche qui vit quelques heures, un ou deux jours au maximum, puis est mergée et supprimée.' },
-		{ term: 'GitFlow', def: 'Un modèle de 2010 avec deux branches permanentes, `main` et `develop`, plus des branches feature, release et hotfix.' },
+		{ term: 'GitFlow', def: 'Un modèle de 2010 avec deux branches permanentes, `master` (souvent renommée `main` aujourd’hui) et `develop`, plus des branches feature, release et hotfix.' },
 		{ term: 'Feature flag', def: 'Un interrupteur dans le code qui active ou désactive une fonctionnalité sans déploiement. Un release toggle cache le travail pas fini.' },
 		{ term: 'Gel du code', def: 'Une période où personne n’a le droit de merger, pour stabiliser la release. Le signe de branches qui vivent trop longtemps.' }
 	],
@@ -138,7 +138,7 @@ jobs:
 		{
 			q: 'Dans sa note de 2020, dans quel cas l’auteur de GitFlow dit-il qu’il reste adapté ?',
 			options: [
-				'Un logiciel versionné explicitement, avec plusieurs versions maintenues dans la nature',
+				'Un logiciel versionné explicitement, ou avec plusieurs versions maintenues dans la nature',
 				'Une appli web déployée plusieurs fois par jour',
 				'Toute équipe qui héberge son code sur GitHub',
 				'Une équipe sans tests automatiques'

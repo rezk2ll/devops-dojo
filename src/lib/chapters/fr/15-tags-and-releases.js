@@ -29,7 +29,7 @@ export default {
 			{
 				add: ['tag -->|"git push origin v1.4.0"| remote[("Remote : GitHub")]'],
 				highlight: ['remote'],
-				note: '**`git push` n’envoie pas les tags par défaut.** Pousse le tag par son nom, ou utilise `git push --follow-tags` pour envoyer les tags annotés qui pointent vers les commits que tu pousses.'
+				note: '**`git push` n’envoie pas les tags par défaut.** Pousse le tag par son nom, ou utilise `git push --follow-tags` pour envoyer les tags annotés qui pointent vers des commits atteignables depuis ce que tu pousses.'
 			},
 			{
 				add: ['remote -->|"release publiée"| ci["Job CI de release"]', 'ci --> art["artefacts : paquet, binaire, image"]'],
@@ -157,7 +157,7 @@ jobs:
 				'Le tag doit être signé avant de pouvoir être poussé'
 			],
 			answer: 0,
-			why: 'Les tags se poussent explicitement : par leur nom, avec `--tags`, ou avec `--follow-tags` pour les tags annotés sur les commits poussés.'
+			why: 'Les tags se poussent explicitement : par leur nom, avec `--tags`, ou avec `--follow-tags` pour les tags annotés atteignables depuis les commits poussés.'
 		},
 		{
 			q: 'La version 1.4.2 reçoit une nouvelle option facultative et rien d’autre ne change. Quelle est la version suivante selon le semantic versioning ?',
