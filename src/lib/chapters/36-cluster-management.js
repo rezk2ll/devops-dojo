@@ -137,7 +137,7 @@ spec:
 			q: 'The HPA asks for 10 pods, but 4 stay `Pending` because no node has room. Which component fixes that?',
 			options: [
 				'The HPA, by lowering CPU requests',
-				'The scheduler, by evicting other pods',
+				'The Deployment controller, by recreating the pending pods',
 				'The cluster autoscaler, by adding a node to a node pool',
 				'The kubelet, by creating more memory'
 			],
