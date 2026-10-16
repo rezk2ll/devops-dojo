@@ -94,7 +94,7 @@ services:
     restart: unless-stopped`,
 		notes: [
 			'The container mounts the **host\'s** `/lib/modules` and kernel headers. It has no kernel of its own, so a VPN that needs a kernel module must use the one the host runs.',
-			'`SYS_MODULE` lets the process load kernel modules. A module loaded from this container goes into the **host kernel**, shared by every other container. Docker\'s [security docs](https://docs.docker.com/engine/security/) list "deny module loading" as part of the default, so this line gives back a lot of power.',
+			'`SYS_MODULE` lets the process load kernel modules. A module loaded from this container goes into the **host kernel**, shared by every other container. Docker\'s [run reference](https://docs.docker.com/engine/containers/run/) lists `SYS_MODULE` among the capabilities **not** granted by default, so this line gives back a lot of power.',
 			'`NET_ADMIN` and `sysctls` change network settings, but inside the container\'s own network namespace. That is the namespace doing its job.',
 			'Compare with the [minecraft example](https://github.com/docker/awesome-compose/blob/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/minecraft/compose.yaml#L8-L11): `deploy.resources.limits.memory: 1.5G`. That is a cgroup limit, the other half of the story.'
 		]

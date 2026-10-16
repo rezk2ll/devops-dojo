@@ -94,7 +94,7 @@ services:
     restart: unless-stopped`,
 		notes: [
 			'Le conteneur monte le `/lib/modules` et les headers du noyau **de l’hôte**. Il n’a pas de noyau à lui, donc un VPN qui a besoin d’un module noyau doit utiliser celui que l’hôte fait tourner.',
-			'`SYS_MODULE` autorise le processus à charger des modules noyau. Un module chargé depuis ce conteneur va dans le **noyau de l’hôte**, partagé par tous les autres conteneurs. La [doc sécurité de Docker](https://docs.docker.com/engine/security/) cite « deny module loading » dans les réglages par défaut, donc cette ligne rend beaucoup de pouvoir.',
+			'`SYS_MODULE` autorise le processus à charger des modules noyau. Un module chargé depuis ce conteneur va dans le **noyau de l’hôte**, partagé par tous les autres conteneurs. La [référence de docker run](https://docs.docker.com/engine/containers/run/) range `SYS_MODULE` parmi les capabilities **non** accordées par défaut, donc cette ligne rend beaucoup de pouvoir.',
 			'`NET_ADMIN` et `sysctls` modifient des réglages réseau, mais dans le namespace réseau du conteneur. C’est le namespace qui fait son travail.',
 			'Compare avec [l’exemple minecraft](https://github.com/docker/awesome-compose/blob/30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562/minecraft/compose.yaml#L8-L11) : `deploy.resources.limits.memory: 1.5G`. C’est une limite cgroup, l’autre moitié de l’histoire.'
 		]

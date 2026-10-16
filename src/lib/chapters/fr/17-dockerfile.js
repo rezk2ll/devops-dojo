@@ -16,7 +16,7 @@ export default {
 		{ term: 'Instruction', def: 'Une ligne du Dockerfile. `FROM` choisit l’image de base, `COPY` ajoute des fichiers, `RUN` lance une commande, `CMD` fixe la commande par défaut.' },
 		{ term: 'Couche', def: 'L’ensemble des changements de fichiers faits par une instruction. `RUN`, `COPY` et `ADD` ajoutent des couches, `CMD` ou `EXPOSE` ne changent que des réglages.' },
 		{ term: 'Cache de build', def: 'Les couches gardées des builds précédents. Si une instruction et ses entrées sont identiques, le builder réutilise la couche au lieu de la relancer.' },
-		{ term: 'Contexte de build', def: 'Les fichiers que tu donnes au builder, en général le dossier courant (`docker build .`). `COPY` ne peut lire que là.' }
+		{ term: 'Contexte de build', def: 'Les fichiers que tu donnes au builder, en général le dossier courant (`docker build .`). Un `COPY` simple ne peut lire que là.' }
 	],
 	diagram: {
 		direction: 'TD',

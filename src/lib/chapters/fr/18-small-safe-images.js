@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'Build multi-stage', def: 'Un Dockerfile avec plusieurs lignes `FROM`. Les premiers stages compilent, le dernier copie seulement le résultat avec `COPY --from`. Les outils de build restent derrière.' },
 		{ term: 'Stage', def: 'Tout ce qui va d’un `FROM` au suivant. Tu peux le nommer avec `AS builder` et ne construire que jusqu’à lui avec `--target`.' },
-		{ term: 'Utilisateur non root', def: 'Une ligne `USER` pour que l’appli ne tourne pas en UID 0. Sans elle, l’utilisateur par défaut dans un conteneur est root.' },
+		{ term: 'Utilisateur non root', def: 'Une ligne `USER` pour que l’appli ne tourne pas en UID 0. Sans elle, ni dans ton Dockerfile ni dans l’image de base, l’utilisateur par défaut dans un conteneur est root.' },
 		{ term: '.dockerignore', def: 'Un fichier qui liste les chemins à laisser hors du contexte de build, comme `.git` ou `node_modules`. Ils n’arrivent jamais au builder.' },
 		{ term: 'Image de base minimale', def: 'Une base qui ne contient presque rien d’autre que ce dont l’appli a besoin : `scratch` (vide), distroless (ni shell ni gestionnaire de paquets), ou une variante slim.' }
 	],
@@ -126,7 +126,7 @@ CMD ["/usr/local/bin/backend"]`,
 			why: 'Chaque `FROM` démarre un nouveau stage. L’image est le stage que tu construis (par défaut le dernier), et les stages précédents n’apportent que ce que `COPY --from` leur prend.'
 		},
 		{
-			q: 'Ton Dockerfile n’a pas d’instruction `USER`. Avec quel utilisateur tourne le processus du conteneur ?',
+			q: 'Ni ton Dockerfile ni son image de base n’ont d’instruction `USER`. Avec quel utilisateur tourne le processus du conteneur ?',
 			options: ['nobody', 'L’utilisateur qui a lancé `docker build`', 'root (UID 0)', 'Un UID non privilégié au hasard'],
 			answer: 2,
 			why: 'L’utilisateur par défaut dans un conteneur est root. Il faut une ligne `USER` pour changer ça.'
