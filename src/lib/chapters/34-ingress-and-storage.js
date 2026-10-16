@@ -88,10 +88,10 @@ spec:
                   number: 8501`,
 		notes: [
 			'The rule has no `host`, so it matches every host name. Requests under `/tf` go to the `tf-serving` Service on port 8501.',
-			'The annotation is read by one controller only, Ingress NGINX. Annotations are how each controller adds its own features, so an Ingress is **less portable** than it looks. And Ingress NGINX itself was [retired in March 2026, with no more security fixes](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/).',
+			'The annotation belongs to Ingress NGINX. Annotations are how each controller adds its own features, so an Ingress is **less portable** than it looks. And Ingress NGINX itself was [retired in March 2026, with no more security fixes](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/).',
 			'There is no `ingressClassName`, so the cluster\'s default IngressClass decides which controller handles it. The docs say you should define one.',
 			'The same app reads its model through a [claim](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/AI/model-serving-tensorflow/pvc.yaml#L1-L11) bound by name to a [PV](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/AI/model-serving-tensorflow/pv.yaml#L1-L12) with `persistentVolumeReclaimPolicy: Retain`: static provisioning, done by hand.',
-			'For databases, a **StatefulSet** gives each Pod a stable name and its own claim, from `volumeClaimTemplates`. The [Cassandra example](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/databases/cassandra/cassandra-statefulset.yaml#L95-L107) gets `cassandra-0`, `cassandra-1`, `cassandra-2`, each with 1Gi. Deleting or scaling down the StatefulSet does **not** delete those volumes.'
+			'For databases, a **StatefulSet** gives each Pod a stable name and its own claim, from `volumeClaimTemplates`. The [Cassandra example](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/databases/cassandra/cassandra-statefulset.yaml#L95-L107) gets `cassandra-0`, `cassandra-1`, `cassandra-2`, each with 1Gi. By default, deleting or scaling down the StatefulSet does **not** delete those volumes.'
 		]
 	},
 	tradeoff: {
@@ -113,7 +113,7 @@ spec:
 			'Is there an ingress controller running at all, and does it handle this Ingress? Check `ingressClassName` and the cluster\'s default IngressClass. Without a controller, the Ingress is just stored text.',
 			'Does `blog.example.com` resolve to the controller\'s load balancer address (the ADDRESS column of `kubectl get ingress`)?',
 			'Does the `blog` Service exist in the **same namespace** as the Ingress, with port 80?',
-			'Does the Service have endpoints? If not, it is yesterday\'s selector or readiness problem.'
+			'Does the Service have ready endpoints? If not, it is yesterday\'s selector or readiness problem.'
 		]
 	},
 	quiz: [
@@ -144,11 +144,11 @@ spec:
 			options: [
 				'They are deleted with the Pods',
 				'They are attached to `db-0`',
-				'They are kept: StatefulSets do not delete their volumes when scaled down',
+				'They are kept: by default, StatefulSets do not delete their volumes when scaled down',
 				'They are converted to ConfigMaps'
 			],
 			answer: 2,
-			why: 'For data safety, scaling down or deleting a StatefulSet leaves its PVCs and volumes in place. Scale back up and `db-1` gets its old data again.'
+			why: 'For data safety, scaling down or deleting a StatefulSet leaves its PVCs and volumes in place, unless you set `persistentVolumeClaimRetentionPolicy` to `Delete`. Scale back up and `db-1` gets its old data again.'
 		}
 	],
 	takeaway: 'An Ingress is a vhost file that needs a controller to mean anything. A claim asks for storage, a volume provides it, and the data outlives the Pod.',

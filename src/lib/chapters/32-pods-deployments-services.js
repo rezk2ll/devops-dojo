@@ -47,7 +47,7 @@ export default {
 					'dep --> rs'
 				],
 				highlight: ['dep'],
-				note: 'You write the **Deployment**. It creates the ReplicaSet from its Pod template. Change the image, and it creates a **second ReplicaSet** for the new version, then shifts Pods over. By default, at most 25% of the Pods are missing at any moment.'
+				note: 'You write the **Deployment**. It creates the ReplicaSet from its Pod template. Change the image, and it creates a **second ReplicaSet** for the new version, then shifts Pods over. By default, at most 25% of the Pods are unavailable at any moment.'
 			},
 			{
 				add: [
@@ -57,7 +57,7 @@ export default {
 					'svc -.-> p3'
 				],
 				highlight: ['svc'],
-				note: 'The **Service** does not know the Deployment exists. It only has a **selector**. Kubernetes keeps a list of the IPs of matching Pods that are ready, and updates it as Pods come and go.'
+				note: 'The **Service** does not know the Deployment exists. It only has a **selector**. Kubernetes keeps a list of the IPs of matching Pods, marks which ones are ready, and updates it as Pods come and go. Traffic only goes to the ready ones.'
 			},
 			{
 				add: [
@@ -118,7 +118,7 @@ spec:
 		hint: 'The Service finds Pods only through its selector, and only uses Pods that are ready.',
 		answer: [
 			'Compare the Service selector (`kubectl get svc shop -o yaml`) with the Pod labels (`kubectl get pods --show-labels`). A typo like `app: shop` vs `app: shopp`, or an extra key in the selector, gives zero matches.',
-			'Check the Pods are **Ready** (the READY column), not just Running. Pods that are not ready are kept out of the Service.',
+			'Readiness is not the cause here: a Pod that is not ready still shows in the EndpointSlice, marked `ready: false`. Once the selector matches, check the Pods are **Ready** (the READY column), not just Running. Pods that are not ready get no traffic.',
 			'Last, check the Service `targetPort` matches the port the container really listens on.'
 		]
 	},
@@ -132,7 +132,7 @@ spec:
 				'It asks the scheduler which Pods are on which node'
 			],
 			answer: 1,
-			why: 'A Service only has a selector. Kubernetes keeps its list of endpoints up to date with the matching Pods, and drops those that are not ready.'
+			why: 'A Service only has a selector. Kubernetes keeps its list of endpoints up to date with the matching Pods, and only sends traffic to those that are ready.'
 		},
 		{
 			q: 'You change the container image in a Deployment. What happens?',

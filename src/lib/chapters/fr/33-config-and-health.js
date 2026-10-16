@@ -32,7 +32,7 @@ export default {
 					'sec -->|"env DB_PASSWORD"| c'
 				],
 				highlight: ['cm', 'sec'],
-				note: 'Même image dans chaque environnement, **ConfigMap** et **Secret** différents. Montée en fichiers, une mise à jour de ConfigMap arrive dans le Pod après un court délai. En variables d’environnement, il faut redémarrer le Pod.'
+				note: 'Même image dans chaque environnement, **ConfigMap** et **Secret** différents. Montée en fichiers (sans `subPath`), une mise à jour de ConfigMap arrive dans le Pod après un court délai. En variables d’environnement, il faut redémarrer le Pod.'
 			},
 			{
 				add: [
@@ -58,7 +58,7 @@ export default {
 					'c -.->|"prêt ou pas"| svc'
 				],
 				highlight: ['svc'],
-				note: 'La **readiness** répond à « peut-il recevoir du trafic maintenant ? ». Quand elle échoue, le conteneur continue de tourner, mais l’IP du Pod est retirée du Service. Pas de redémarrage. Il revient quand la probe repasse.'
+				note: 'La **readiness** répond à « peut-il recevoir du trafic maintenant ? ». Quand elle échoue, le conteneur continue de tourner, mais le Pod est marqué pas prêt et le Service ne lui envoie plus de trafic. Pas de redémarrage. Il revient quand la probe repasse.'
 			},
 			{
 				add: [
@@ -131,15 +131,15 @@ export default {
 			q: 'Un conteneur échoue à sa readiness probe. Que fait Kubernetes ?',
 			options: [
 				'Il redémarre le conteneur',
-				'Il retire l’IP du Pod des endpoints du Service et laisse tourner le conteneur',
+				'Il arrête d’envoyer le trafic du Service au Pod et laisse tourner le conteneur',
 				'Il supprime le Pod et le ReplicaSet en crée un nouveau',
 				'Il déplace le Pod sur un autre node'
 			],
 			answer: 1,
-			why: 'La readiness contrôle le trafic, pas la vie. Une readiness probe en échec sort le Pod du Service jusqu’à ce qu’elle repasse. Redémarrer, c’est ce que fait une liveness probe en échec.'
+			why: 'La readiness contrôle le trafic, pas la vie. Tant que la readiness probe échoue, le Service n’envoie aucun trafic au Pod, jusqu’à ce qu’elle repasse. Redémarrer, c’est ce que fait une liveness probe en échec.'
 		},
 		{
-			q: 'Un conteneur dépasse sa limite mémoire alors que le node manque de mémoire. Que peut-il se passer ?',
+			q: 'Un conteneur essaie d’utiliser plus de mémoire que sa limite mémoire. Que peut-il se passer ?',
 			options: [
 				'Il est bridé jusqu’à ce que sa consommation baisse',
 				'Sa limite est remontée au niveau de la request',

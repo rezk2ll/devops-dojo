@@ -47,7 +47,7 @@ export default {
 					'dep --> rs'
 				],
 				highlight: ['dep'],
-				note: 'C’est toi qui écris le **Deployment**. Il crée le ReplicaSet à partir de son template de Pod. Change l’image, et il crée un **second ReplicaSet** pour la nouvelle version, puis bascule les Pods. Par défaut, au plus 25 % des Pods manquent à un instant donné.'
+				note: 'C’est toi qui écris le **Deployment**. Il crée le ReplicaSet à partir de son template de Pod. Change l’image, et il crée un **second ReplicaSet** pour la nouvelle version, puis bascule les Pods. Par défaut, au plus 25 % des Pods sont indisponibles à un instant donné.'
 			},
 			{
 				add: [
@@ -57,7 +57,7 @@ export default {
 					'svc -.-> p3'
 				],
 				highlight: ['svc'],
-				note: 'Le **Service** ne sait pas que le Deployment existe. Il n’a qu’un **selector**. Kubernetes tient la liste des IP des Pods correspondants qui sont prêts, et la met à jour quand les Pods vont et viennent.'
+				note: 'Le **Service** ne sait pas que le Deployment existe. Il n’a qu’un **selector**. Kubernetes tient la liste des IP des Pods correspondants, marque ceux qui sont prêts, et la met à jour quand les Pods vont et viennent. Le trafic ne va qu’aux Pods prêts.'
 			},
 			{
 				add: [
@@ -118,7 +118,7 @@ spec:
 		hint: 'Le Service ne trouve les Pods que par son selector, et n’utilise que les Pods prêts.',
 		answer: [
 			'Compare le selector du Service (`kubectl get svc shop -o yaml`) aux labels des Pods (`kubectl get pods --show-labels`). Une faute comme `app: shop` contre `app: shopp`, ou une clé en trop dans le selector, donne zéro correspondance.',
-			'Vérifie que les Pods sont **Ready** (la colonne READY), pas seulement Running. Les Pods pas prêts sont tenus hors du Service.',
+			'La readiness n’est pas la cause ici : un Pod pas prêt apparaît quand même dans l’EndpointSlice, marqué `ready: false`. Une fois le selector corrigé, vérifie que les Pods sont **Ready** (la colonne READY), pas seulement Running. Les Pods pas prêts ne reçoivent pas de trafic.',
 			'Enfin, vérifie que le `targetPort` du Service correspond au port sur lequel le conteneur écoute vraiment.'
 		]
 	},
@@ -132,7 +132,7 @@ spec:
 				'Il demande au scheduler quels Pods sont sur quel node'
 			],
 			answer: 1,
-			why: 'Un Service n’a qu’un selector. Kubernetes tient sa liste d’endpoints à jour avec les Pods correspondants, et écarte ceux qui ne sont pas prêts.'
+			why: 'Un Service n’a qu’un selector. Kubernetes tient sa liste d’endpoints à jour avec les Pods correspondants, et n’envoie le trafic qu’à ceux qui sont prêts.'
 		},
 		{
 			q: 'Tu changes l’image du conteneur dans un Deployment. Que se passe-t-il ?',

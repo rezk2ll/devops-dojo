@@ -88,10 +88,10 @@ spec:
                   number: 8501`,
 		notes: [
 			'La règle n’a pas de `host`, donc elle s’applique à tous les noms d’hôte. Les requêtes sous `/tf` vont au Service `tf-serving` sur le port 8501.',
-			'L’annotation n’est lue que par un seul controller, Ingress NGINX. Les annotations sont la façon dont chaque controller ajoute ses propres fonctions, donc un Ingress est **moins portable** qu’il n’en a l’air. Et Ingress NGINX lui-même a été [retiré en mars 2026, sans plus aucun correctif de sécurité](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/).',
+			'L’annotation appartient à Ingress NGINX. Les annotations sont la façon dont chaque controller ajoute ses propres fonctions, donc un Ingress est **moins portable** qu’il n’en a l’air. Et Ingress NGINX lui-même a été [retiré en mars 2026, sans plus aucun correctif de sécurité](https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/).',
 			'Il n’y a pas d’`ingressClassName`, donc c’est l’IngressClass par défaut du cluster qui décide quel controller le prend. La doc dit que tu devrais en définir une.',
 			'La même appli lit son modèle via un [claim](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/AI/model-serving-tensorflow/pvc.yaml#L1-L11) lié par son nom à un [PV](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/AI/model-serving-tensorflow/pv.yaml#L1-L12) avec `persistentVolumeReclaimPolicy: Retain` : provisionnement statique, fait à la main.',
-			'Pour les bases de données, un **StatefulSet** donne à chaque Pod un nom stable et son propre claim, à partir de `volumeClaimTemplates`. L’[exemple Cassandra](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/databases/cassandra/cassandra-statefulset.yaml#L95-L107) obtient `cassandra-0`, `cassandra-1`, `cassandra-2`, chacun avec 1Gi. Supprimer ou réduire le StatefulSet ne supprime **pas** ces volumes.'
+			'Pour les bases de données, un **StatefulSet** donne à chaque Pod un nom stable et son propre claim, à partir de `volumeClaimTemplates`. L’[exemple Cassandra](https://github.com/kubernetes/examples/blob/d6b8cd27eacb51e651a1aa6f7c190a28713eff6e/databases/cassandra/cassandra-statefulset.yaml#L95-L107) obtient `cassandra-0`, `cassandra-1`, `cassandra-2`, chacun avec 1Gi. Par défaut, supprimer ou réduire le StatefulSet ne supprime **pas** ces volumes.'
 		]
 	},
 	tradeoff: {
@@ -113,7 +113,7 @@ spec:
 			'Y a-t-il un ingress controller qui tourne, et prend-il en charge cet Ingress ? Vérifie `ingressClassName` et l’IngressClass par défaut du cluster. Sans controller, l’Ingress n’est que du texte stocké.',
 			'Est-ce que `blog.example.com` résout vers l’adresse du load balancer du controller (la colonne ADDRESS de `kubectl get ingress`) ?',
 			'Le Service `blog` existe-t-il dans le **même namespace** que l’Ingress, avec le port 80 ?',
-			'Le Service a-t-il des endpoints ? Sinon, c’est le problème de selector ou de readiness d’hier.'
+			'Le Service a-t-il des endpoints prêts ? Sinon, c’est le problème de selector ou de readiness d’hier.'
 		]
 	},
 	quiz: [
@@ -144,11 +144,11 @@ spec:
 			options: [
 				'Ils sont supprimés avec les Pods',
 				'Ils sont rattachés à `db-0`',
-				'Ils sont gardés : les StatefulSets ne suppriment pas leurs volumes quand on les réduit',
+				'Ils sont gardés : par défaut, les StatefulSets ne suppriment pas leurs volumes quand on les réduit',
 				'Ils sont convertis en ConfigMaps'
 			],
 			answer: 2,
-			why: 'Pour la sécurité des données, réduire ou supprimer un StatefulSet laisse ses PVC et ses volumes en place. Remonte à 3 et `db-1` retrouve ses anciennes données.'
+			why: 'Pour la sécurité des données, réduire ou supprimer un StatefulSet laisse ses PVC et ses volumes en place, sauf si tu règles `persistentVolumeClaimRetentionPolicy` sur `Delete`. Remonte à 3 et `db-1` retrouve ses anciennes données.'
 		}
 	],
 	takeaway: 'Un Ingress est un fichier vhost qui a besoin d’un controller pour vouloir dire quelque chose. Un claim demande du stockage, un volume le fournit, et les données survivent au Pod.',

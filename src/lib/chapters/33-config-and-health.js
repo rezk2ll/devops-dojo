@@ -32,7 +32,7 @@ export default {
 					'sec -->|"env DB_PASSWORD"| c'
 				],
 				highlight: ['cm', 'sec'],
-				note: 'Same image in every environment, different **ConfigMap** and **Secret**. Mounted as files, a ConfigMap update reaches the Pod after a short delay. As environment variables, it needs a Pod restart.'
+				note: 'Same image in every environment, different **ConfigMap** and **Secret**. Mounted as files (without `subPath`), a ConfigMap update reaches the Pod after a short delay. As environment variables, it needs a Pod restart.'
 			},
 			{
 				add: [
@@ -58,7 +58,7 @@ export default {
 					'c -.->|"ready or not"| svc'
 				],
 				highlight: ['svc'],
-				note: '**Readiness** answers "can it take traffic now?". When it fails, the container keeps running, but the Pod\'s IP is removed from the Service. No restart. It comes back when the probe passes again.'
+				note: '**Readiness** answers "can it take traffic now?". When it fails, the container keeps running, but the Pod is marked not ready and the Service stops sending it traffic. No restart. It comes back when the probe passes again.'
 			},
 			{
 				add: [
@@ -131,15 +131,15 @@ export default {
 			q: 'A container fails its readiness probe. What does Kubernetes do?',
 			options: [
 				'It restarts the container',
-				'It removes the Pod\'s IP from the Service endpoints and keeps the container running',
+				'It stops sending Service traffic to the Pod and keeps the container running',
 				'It deletes the Pod and the ReplicaSet creates a new one',
 				'It moves the Pod to another node'
 			],
 			answer: 1,
-			why: 'Readiness controls traffic, not life. A failing readiness probe takes the Pod out of the Service until it passes again. Restarting is what a failing liveness probe does.'
+			why: 'Readiness controls traffic, not life. While the readiness probe fails, the Service sends the Pod no traffic, until it passes again. Restarting is what a failing liveness probe does.'
 		},
 		{
-			q: 'A container goes over its memory limit while the node is short on memory. What can happen?',
+			q: 'A container tries to use more memory than its memory limit. What can happen?',
 			options: [
 				'It is throttled until usage drops',
 				'Its limit is raised to the request',

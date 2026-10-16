@@ -139,7 +139,7 @@ spec:
 			why: 'Un chart est le paquet. Une release en est une instance qui tourne dans un cluster. Installe le même chart deux fois et tu as deux releases.'
 		},
 		{
-			q: 'Tu lances `helm install -f a.yaml -f b.yaml --set replicas=5`. Les deux fichiers définissent `replicas`. Quelle valeur gagne ?',
+			q: 'Tu lances `helm install my-app ./chart -f a.yaml -f b.yaml --set replicas=5`. Les deux fichiers définissent `replicas`. Quelle valeur gagne ?',
 			options: ['Celle de `a.yaml`', 'Celle de `b.yaml`', '`5`', 'Le défaut du chart dans `values.yaml`'],
 			answer: 2,
 			why: 'Les défauts du chart sont surchargés par les fichiers `-f` (le plus à droite gagne entre eux), et `--set` les surcharge tous.'
