@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'Multi-stage build', def: 'A Dockerfile with several `FROM` lines. Early stages build, the last stage copies only the result with `COPY --from`. Build tools stay behind.' },
 		{ term: 'Stage', def: 'Everything from one `FROM` to the next. You can name it with `AS builder` and build only up to it with `--target`.' },
-		{ term: 'Non-root user', def: 'A `USER` line so the app does not run as UID 0. Without it, the default user in a container is root.' },
+		{ term: 'Non-root user', def: 'A `USER` line so the app does not run as UID 0. Without one, in your Dockerfile or in the base image, the default user in a container is root.' },
 		{ term: '.dockerignore', def: 'A file listing paths to leave out of the build context, like `.git` or `node_modules`. They never reach the builder.' },
 		{ term: 'Minimal base image', def: 'A base with little or nothing besides what the app needs: `scratch` (empty), distroless (no shell, no package manager), or a slim variant.' }
 	],
@@ -126,7 +126,7 @@ CMD ["/usr/local/bin/backend"]`,
 			why: 'Each `FROM` starts a new stage. The image is the stage you build (by default the last one), and earlier stages contribute only what `COPY --from` takes from them.'
 		},
 		{
-			q: 'Your Dockerfile has no `USER` instruction. Which user does the container process run as?',
+			q: 'Neither your Dockerfile nor its base image has a `USER` instruction. Which user does the container process run as?',
 			options: ['nobody', 'The user who ran `docker build`', 'root (UID 0)', 'A random unprivileged UID'],
 			answer: 2,
 			why: 'The default user inside a container is root. You need a `USER` line to change it.'

@@ -96,7 +96,7 @@ env:
 			'C’est le workflow de démarrage de GitHub pour publier une image. Il pousse sur `ghcr.io`, la registry de GitHub, sous le nom du dépôt.',
 			'Les tags viennent de `docker/metadata-action` avec ses valeurs par défaut : un push sur une branche donne un tag au nom de la branche, un tag Git `v1.2.3` donne `v1.2.3` **et `latest`**, un run nocturne donne `nightly`. Son [README](https://github.com/docker/metadata-action/blob/96383f45573cb7f253c731d3b3ab81c87ef81934/README.md#latest-tag) montre que même `v2.0.8-beta.67` reçoit `latest` de cette façon. Une bêta devient « latest ».',
 			'L’étape de signature signe `tag@digest`, pas le tag seul. Les tags bougent. C’est le digest qui mérite d’être signé.',
-			'Regarde les lignes `uses:` : le workflow fixe **ses propres** actions par SHA de commit complet, avec la version en commentaire. Même idée que fixer une image par digest.'
+			'Regarde les lignes `uses:` : le workflow fixe les actions tierces par SHA de commit complet, avec la version en commentaire (seule `actions/checkout@v4`, celle de GitHub, utilise un tag). Même idée que fixer une image par digest.'
 		]
 	},
 	tradeoff: {

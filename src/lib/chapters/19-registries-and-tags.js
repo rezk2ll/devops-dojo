@@ -96,7 +96,7 @@ env:
 			'This is GitHub\'s starter workflow for publishing an image. It pushes to `ghcr.io`, GitHub\'s registry, under the repository\'s own name.',
 			'Tags come from `docker/metadata-action` with its defaults: a branch push gives a tag named after the branch, a Git tag `v1.2.3` gives `v1.2.3` **and `latest`**, a nightly run gives `nightly`. Its [README](https://github.com/docker/metadata-action/blob/96383f45573cb7f253c731d3b3ab81c87ef81934/README.md#latest-tag) shows even `v2.0.8-beta.67` gets `latest` this way. A beta becomes "latest".',
 			'The signing step signs `tag@digest`, not the tag alone. Tags move. The digest is the thing worth signing.',
-			'Look at the `uses:` lines: the workflow pins **its own** actions by full commit SHA, with the version in a comment. Same idea as pinning an image by digest.'
+			'Look at the `uses:` lines: the workflow pins the third-party actions by full commit SHA, with the version in a comment (only GitHub\'s own `actions/checkout@v4` uses a tag). Same idea as pinning an image by digest.'
 		]
 	},
 	tradeoff: {

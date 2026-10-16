@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'Service', def: 'One component of the app in `compose.yaml` (web, backend, db). Compose runs one or more containers for it.' },
 		{ term: 'Network', def: 'Compose creates a default network for the project. Every service joins it and reaches the others **by service name**, like `db:5432`.' },
-		{ term: 'Volume', def: 'Storage that outlives the container. A named volume (`db-data`) survives `docker compose down`. Only `down -v` removes it.' },
+		{ term: 'Volume', def: 'Storage that outlives the container. A named volume (`db-data`) survives `docker compose down`. `down -v` removes it.' },
 		{ term: 'Env file', def: 'Two kinds. A `.env` file in the project folder fills `${VAR}` in the compose file. `env_file:` on a service passes variables into its container.' },
 		{ term: 'Healthcheck', def: 'A command the container runs on a schedule to say "I am ready". Its result is the container\'s health status.' },
 		{ term: 'depends_on', def: 'Start order between services. With `condition: service_healthy`, Compose waits for the dependency\'s healthcheck to pass.' }
@@ -120,7 +120,7 @@ secrets:
     file: db/password.txt`,
 		notes: [
 			'No `networks:` key at all. Compose puts the three services on the default network, so the backend connects to `db` by name.',
-			'`expose: 5432` opens the port to other services only. `ports: 80:80` on `proxy` is the one door from the host.',
+			'`expose: 5432` publishes nothing to the host. It only records the port: other services on the shared network can reach any port of `db` anyway. `ports: 80:80` on `proxy` is the one door from the host.',
 			'`backend` waits for `db` to be **healthy**. `proxy` uses the short form, `depends_on: [backend]`, which only waits for the backend container to start.',
 			'`POSTGRES_PASSWORD_FILE` points at the mounted secret, so the password never sits in `environment`. And `image: postgres` has no tag, so it means `latest`: pin it before this leaves your laptop (day 19).'
 		]

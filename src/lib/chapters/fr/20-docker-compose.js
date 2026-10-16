@@ -14,7 +14,7 @@ export default {
 	terms: [
 		{ term: 'Service', def: 'Un composant de l’appli dans `compose.yaml` (web, backend, db). Compose fait tourner un ou plusieurs conteneurs pour lui.' },
 		{ term: 'Réseau', def: 'Compose crée un réseau par défaut pour le projet. Chaque service le rejoint et joint les autres **par leur nom de service**, comme `db:5432`.' },
-		{ term: 'Volume', def: 'Un stockage qui survit au conteneur. Un volume nommé (`db-data`) survit à `docker compose down`. Seul `down -v` le supprime.' },
+		{ term: 'Volume', def: 'Un stockage qui survit au conteneur. Un volume nommé (`db-data`) survit à `docker compose down`. `down -v` le supprime.' },
 		{ term: 'Fichier env', def: 'Deux sortes. Un fichier `.env` dans le dossier du projet remplit les `${VAR}` du fichier compose. `env_file:` sur un service passe des variables dans son conteneur.' },
 		{ term: 'Healthcheck', def: 'Une commande que le conteneur lance à intervalle régulier pour dire « je suis prêt ». Son résultat donne l’état de santé du conteneur.' },
 		{ term: 'depends_on', def: 'L’ordre de démarrage entre services. Avec `condition: service_healthy`, Compose attend que le healthcheck de la dépendance passe.' }
@@ -120,7 +120,7 @@ secrets:
     file: db/password.txt`,
 		notes: [
 			'Aucune clé `networks:`. Compose met les trois services sur le réseau par défaut, donc le backend se connecte à `db` par son nom.',
-			'`expose: 5432` ouvre le port aux autres services seulement. `ports: 80:80` sur `proxy` est la seule porte depuis l’hôte.',
+			'`expose: 5432` ne publie rien sur l’hôte. Il note seulement le port : les autres services du réseau partagé peuvent de toute façon joindre n’importe quel port de `db`. `ports: 80:80` sur `proxy` est la seule porte depuis l’hôte.',
 			'`backend` attend que `db` soit **healthy**. `proxy` utilise la forme courte, `depends_on: [backend]`, qui attend seulement que le conteneur du backend démarre.',
 			'`POSTGRES_PASSWORD_FILE` pointe vers le secret monté, donc le mot de passe n’est jamais dans `environment`. Et `image: postgres` n’a pas de tag, donc ça veut dire `latest` : fixe-le avant que ça quitte ton portable (jour 19).'
 		]

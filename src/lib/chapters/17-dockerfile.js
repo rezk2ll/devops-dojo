@@ -16,7 +16,7 @@ export default {
 		{ term: 'Instruction', def: 'One line of the Dockerfile. `FROM` picks the base image, `COPY` adds files, `RUN` runs a command, `CMD` sets the default command.' },
 		{ term: 'Layer', def: 'The set of filesystem changes one instruction makes. `RUN`, `COPY` and `ADD` add layers, `CMD` or `EXPOSE` only change settings.' },
 		{ term: 'Build cache', def: 'Saved layers from earlier builds. If an instruction and its inputs match, the builder reuses the layer instead of running it again.' },
-		{ term: 'Build context', def: 'The files you hand to the builder, usually the current directory (`docker build .`). `COPY` can only read from it.' }
+		{ term: 'Build context', def: 'The files you hand to the builder, usually the current directory (`docker build .`). A plain `COPY` can only read from it.' }
 	],
 	diagram: {
 		direction: 'TD',
